@@ -97,8 +97,8 @@ export function SettingsPanel({
 
       {/* Composition */}
       <PartyCard tone="cream" padding="md">
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <p className="font-display text-base font-extrabold uppercase text-ink">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <p className="min-w-0 font-display text-base font-extrabold uppercase text-ink">
             {t('lobby.composition')}
           </p>
           <PartyButton

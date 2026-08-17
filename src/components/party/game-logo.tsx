@@ -63,26 +63,26 @@ export function GameMark({ size = 56, className }: { size?: number; className?: 
       aria-label="The Imposter"
     >
       {/* Jeton */}
-      <circle cx="32" cy="34" r="26" fill="hsl(var(--ink))" />
-      <circle cx="32" cy="30" r="26" fill="hsl(var(--yellow))" stroke="hsl(var(--ink))" strokeWidth="3" />
+      <circle cx="32" cy="34" r="26" fill="var(--color-ink)" />
+      <circle cx="32" cy="30" r="26" fill="var(--color-yellow)" stroke="var(--color-ink)" strokeWidth="3" />
       {/* Bandeau */}
       <path
         d="M8 28h48c0 4-1 7-2 10H10c-1-3-2-6-2-10z"
-        fill="hsl(var(--red))"
-        stroke="hsl(var(--ink))"
+        fill="var(--color-red)"
+        stroke="var(--color-ink)"
         strokeWidth="3"
         strokeLinejoin="round"
       />
       {/* Yeux */}
-      <ellipse cx="23" cy="33" rx="5" ry="4" fill="hsl(var(--paper))" stroke="hsl(var(--ink))" strokeWidth="2.5" />
-      <circle cx="24" cy="33" r="2" fill="hsl(var(--ink))" />
-      <ellipse cx="41" cy="33" rx="5" ry="4" fill="hsl(var(--paper))" stroke="hsl(var(--ink))" strokeWidth="2.5" />
-      <circle cx="42" cy="33" r="2" fill="hsl(var(--ink))" />
+      <ellipse cx="23" cy="33" rx="5" ry="4" fill="var(--color-paper)" stroke="var(--color-ink)" strokeWidth="2.5" />
+      <circle cx="24" cy="33" r="2" fill="var(--color-ink)" />
+      <ellipse cx="41" cy="33" rx="5" ry="4" fill="var(--color-paper)" stroke="var(--color-ink)" strokeWidth="2.5" />
+      <circle cx="42" cy="33" r="2" fill="var(--color-ink)" />
       {/* Sourire */}
       <path
         d="M25 45c4 3 10 3 14 0"
         fill="none"
-        stroke="hsl(var(--ink))"
+        stroke="var(--color-ink)"
         strokeWidth="3"
         strokeLinecap="round"
       />

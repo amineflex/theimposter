@@ -77,7 +77,6 @@ export function AdminWords() {
   const [saving, setSaving] = React.useState(false)
 
   const load = React.useCallback(async () => {
-    setItems(null)
     const params = new URLSearchParams({ kind, page: String(page), pageSize: '25' })
     if (search) params.set('search', search)
     if (difficulty) params.set('difficulty', difficulty)
@@ -94,9 +93,32 @@ export function AdminWords() {
     }
   }, [kind, page, search, difficulty, pack])
 
+  // Rechargement à chaque changement de filtre : l'écriture d'état a lieu après
+  // l'`await`, jamais dans le corps de l'effet.
   React.useEffect(() => {
-    void load()
-  }, [load])
+    let cancelled = false
+    void (async () => {
+      const params = new URLSearchParams({ kind, page: String(page), pageSize: '25' })
+      if (search) params.set('search', search)
+      if (difficulty) params.set('difficulty', difficulty)
+      if (pack) params.set('pack', pack)
+      try {
+        const result = await api.get<{ items: WordItem[]; total: number }>(
+          `/api/admin/words?${params.toString()}`,
+        )
+        if (cancelled) return
+        setItems(result.items)
+        setTotal(result.total)
+      } catch (error) {
+        if (cancelled) return
+        toast.error(error instanceof ApiClientError ? error.message : 'Chargement impossible.')
+        setItems([])
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [kind, page, search, difficulty, pack])
 
   const save = async () => {
     if (!form) return

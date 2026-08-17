@@ -18,22 +18,22 @@ export interface AvatarDefinition {
 }
 
 export const AVATARS: AvatarDefinition[] = [
-  { key: 'rouge-mask', label: 'Blob rouge', color: 'var(--red)', face: 'smile', accessory: 'none' },
-  { key: 'ambre-eye', label: 'Blob jaune à lunettes', color: 'var(--yellow)', face: 'grin', accessory: 'glasses' },
-  { key: 'violet-domino', label: 'Blob violet à casquette', color: 'var(--purple)', face: 'happy', accessory: 'cap' },
-  { key: 'cyan-hood', label: 'Blob bleu à antenne', color: 'var(--blue)', face: 'surprised', accessory: 'antenna' },
-  { key: 'vert-visor', label: 'Blob vert farceur', color: 'var(--green)', face: 'tongue', accessory: 'none' },
-  { key: 'rose-ghost', label: 'Blob rose à nœud', color: 'var(--pink)', face: 'smile', accessory: 'bow' },
-  { key: 'orange-fox', label: 'Blob orange moustachu', color: 'var(--orange)', face: 'happy', accessory: 'mustache' },
-  { key: 'bleu-bandit', label: 'Blob bleu sourcilleux', color: 'var(--blue)', face: 'grin', accessory: 'brows' },
-  { key: 'lime-mask', label: 'Blob vert à casquette', color: 'var(--green)', face: 'wink', accessory: 'cap' },
-  { key: 'turquoise-eye', label: 'Blob rouge à lunettes', color: 'var(--red)', face: 'happy', accessory: 'glasses' },
-  { key: 'indigo-domino', label: 'Blob violet à antenne', color: 'var(--purple)', face: 'smile', accessory: 'antenna' },
-  { key: 'sable-hood', label: 'Blob jaune surpris', color: 'var(--yellow)', face: 'surprised', accessory: 'none' },
-  { key: 'magenta-visor', label: 'Blob rose moustachu', color: 'var(--pink)', face: 'grin', accessory: 'mustache' },
-  { key: 'acier-ghost', label: 'Blob crème à nœud', color: 'var(--cream-deep)', face: 'wink', accessory: 'bow' },
-  { key: 'brique-fox', label: 'Blob orange à sourcils', color: 'var(--orange)', face: 'smile', accessory: 'brows' },
-  { key: 'olive-bandit', label: 'Blob vert taquin', color: 'var(--green)', face: 'tongue', accessory: 'glasses' },
+  { key: 'rouge-mask', label: 'Blob rouge', color: 'var(--color-red)', face: 'smile', accessory: 'none' },
+  { key: 'ambre-eye', label: 'Blob jaune à lunettes', color: 'var(--color-yellow)', face: 'grin', accessory: 'glasses' },
+  { key: 'violet-domino', label: 'Blob violet à casquette', color: 'var(--color-purple)', face: 'happy', accessory: 'cap' },
+  { key: 'cyan-hood', label: 'Blob bleu à antenne', color: 'var(--color-blue)', face: 'surprised', accessory: 'antenna' },
+  { key: 'vert-visor', label: 'Blob vert farceur', color: 'var(--color-green)', face: 'tongue', accessory: 'none' },
+  { key: 'rose-ghost', label: 'Blob rose à nœud', color: 'var(--color-pink)', face: 'smile', accessory: 'bow' },
+  { key: 'orange-fox', label: 'Blob orange moustachu', color: 'var(--color-orange)', face: 'happy', accessory: 'mustache' },
+  { key: 'bleu-bandit', label: 'Blob bleu sourcilleux', color: 'var(--color-blue)', face: 'grin', accessory: 'brows' },
+  { key: 'lime-mask', label: 'Blob vert à casquette', color: 'var(--color-green)', face: 'wink', accessory: 'cap' },
+  { key: 'turquoise-eye', label: 'Blob rouge à lunettes', color: 'var(--color-red)', face: 'happy', accessory: 'glasses' },
+  { key: 'indigo-domino', label: 'Blob violet à antenne', color: 'var(--color-purple)', face: 'smile', accessory: 'antenna' },
+  { key: 'sable-hood', label: 'Blob jaune surpris', color: 'var(--color-yellow)', face: 'surprised', accessory: 'none' },
+  { key: 'magenta-visor', label: 'Blob rose moustachu', color: 'var(--color-pink)', face: 'grin', accessory: 'mustache' },
+  { key: 'acier-ghost', label: 'Blob crème à nœud', color: 'var(--color-cream-deep)', face: 'wink', accessory: 'bow' },
+  { key: 'brique-fox', label: 'Blob orange à sourcils', color: 'var(--color-orange)', face: 'smile', accessory: 'brows' },
+  { key: 'olive-bandit', label: 'Blob vert taquin', color: 'var(--color-green)', face: 'tongue', accessory: 'glasses' },
 ]
 
 export const AVATAR_KEYS = AVATARS.map((a) => a.key)

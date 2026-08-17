@@ -70,8 +70,8 @@ export function Countdown({ remaining, total, size = 'md', className, warnAt = 5
           cx={px / 2}
           cy={px / 2}
           r={radius}
-          fill={warning ? 'hsl(var(--red))' : 'hsl(var(--paper))'}
-          stroke="hsl(var(--ink))"
+          fill={warning ? 'var(--color-red)' : 'var(--color-paper)'}
+          stroke="var(--color-ink)"
           strokeWidth="3"
         />
         <circle
@@ -79,7 +79,7 @@ export function Countdown({ remaining, total, size = 'md', className, warnAt = 5
           cy={px / 2}
           r={radius}
           fill="none"
-          stroke={warning ? 'hsl(var(--yellow))' : 'hsl(var(--blue))'}
+          stroke={warning ? 'var(--color-yellow)' : 'var(--color-blue)'}
           strokeWidth={stroke}
           strokeLinecap="butt"
           strokeDasharray={circumference}

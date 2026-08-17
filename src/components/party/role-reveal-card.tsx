@@ -63,7 +63,7 @@ export function RoleRevealCard({ role, word, hint, className }: RoleRevealCardPr
       transition={{ duration: 0.42, ease: [0.34, 1.45, 0.64, 1] }}
       style={{ transformPerspective: 1200 }}
       className={cn(
-        'no-select relative w-full rounded-blob border-5 border-ink px-5 py-8 text-center shadow-toy-lg',
+        'no-select relative w-full rounded-blob border-4 border-ink px-5 py-8 text-center shadow-toy-lg',
         style.card,
         className,
       )}

@@ -37,10 +37,6 @@ export function LobbyView({ room }: { room: RoomViewModel }) {
   const settings = room.room?.settings
   const maxPlayers = room.room?.max_players ?? 12
 
-  React.useEffect(() => {
-    if (!settingsOpen) setDraftSettings(room.room?.settings)
-  }, [room.room?.settings, settingsOpen])
-
   // Petit son quand un joueur rejoint.
   const previousCount = React.useRef(present.length)
   React.useEffect(() => {
@@ -205,7 +201,16 @@ export function LobbyView({ room }: { room: RoomViewModel }) {
             >
               {t('lobby.start')}
             </PartyButton>
-            <PartyButton variant="paper" size="md" block onClick={() => setSettingsOpen(true)}>
+            <PartyButton
+              variant="paper"
+              size="md"
+              block
+              onClick={() => {
+                // Le brouillon part toujours des réglages actuels de la room.
+                setDraftSettings(settings)
+                setSettingsOpen(true)
+              }}
+            >
               <Settings2 className="h-5 w-5" aria-hidden />
               {t('common.settings')}
             </PartyButton>

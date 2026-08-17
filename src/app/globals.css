@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+/* Utilitaires d'animation d'entrée/sortie utilisés par les composants Radix. */
+@import 'tw-animate-css';
 
 /* ===========================================================================
  * DESIGN TOKENS — The Imposter
@@ -13,98 +13,226 @@
  *  - aucun flou (blur / backdrop-filter),
  *  - aucun glow ni néon,
  *  - aucune transparence décorative.
- * Toute valeur de couleur, ombre, rayon ou durée vit ici.
+ *
+ * Tailwind v4 : le thème est déclaré ici en CSS (`@theme`), il n'y a plus de
+ * `tailwind.config.ts`. Chaque variable de `@theme` génère les utilitaires
+ * correspondants (`--color-yellow` → `bg-yellow`, `text-yellow`, …).
  * ======================================================================== */
 
-@layer base {
-  :root {
-    /* --- Base ------------------------------------------------------------- */
-    --cream: 43 100% 95%; /* #FFF8E7 */
-    --cream-deep: 42 78% 89%; /* fond alternatif, un ton plus soutenu */
-    --paper: 48 100% 99%; /* surfaces de cartes, presque blanc chaud */
-    --ink: 0 0% 13%; /* #202020 — contours et texte */
-    --ink-soft: 0 0% 34%; /* texte secondaire */
+@theme {
+  /* --- Base ------------------------------------------------------------- */
+  --color-cream: hsl(43 100% 95%); /* #FFF8E7 */
+  --color-cream-deep: hsl(42 78% 89%); /* fond alternatif, un ton plus soutenu */
+  --color-paper: hsl(48 100% 99%); /* surfaces de cartes, presque blanc chaud */
+  --color-ink: hsl(0 0% 13%); /* #202020 — contours et texte */
+  --color-ink-soft: hsl(0 0% 34%); /* texte secondaire */
 
-    /* --- Palette d'accent (aplats uniquement) ----------------------------- */
-    --red: 4 85% 58%; /* #F04438 */
-    --yellow: 46 100% 65%; /* #FFD84D */
-    --blue: 212 71% 59%; /* #4A90E2 */
-    --green: 112 50% 55%; /* #61C454 */
-    --pink: 330 80% 69%; /* #F06FAF */
-    --orange: 28 100% 61%; /* #FF9638 */
-    --purple: 255 57% 64%; /* #8B6FD6 */
+  /* --- Palette d'accent (aplats uniquement) ----------------------------- */
+  --color-red: hsl(4 85% 58%); /* #F04438 */
+  --color-yellow: hsl(46 100% 65%); /* #FFD84D */
+  --color-blue: hsl(212 71% 59%); /* #4A90E2 */
+  --color-green: hsl(112 50% 55%); /* #61C454 */
+  --color-pink: hsl(330 80% 69%); /* #F06FAF */
+  --color-orange: hsl(28 100% 61%); /* #FF9638 */
+  --color-purple: hsl(255 57% 64%); /* #8B6FD6 */
 
-    /* --- Modes de jeu (menus uniquement) ---------------------------------- */
-    --mode-impostor: var(--red);
-    --mode-undercover: var(--blue);
+  /* --- Tokens sémantiques (primitives shadcn/ui) ------------------------ */
+  --color-background: var(--color-cream);
+  --color-foreground: var(--color-ink);
+  --color-card: var(--color-paper);
+  --color-card-foreground: var(--color-ink);
+  --color-popover: var(--color-paper);
+  --color-popover-foreground: var(--color-ink);
+  --color-primary: var(--color-red);
+  --color-primary-foreground: var(--color-paper);
+  --color-secondary: var(--color-cream-deep);
+  --color-secondary-foreground: var(--color-ink);
+  --color-muted: var(--color-cream-deep);
+  --color-muted-foreground: var(--color-ink-soft);
+  --color-accent: var(--color-yellow);
+  --color-accent-foreground: var(--color-ink);
+  --color-destructive: var(--color-red);
+  --color-destructive-foreground: var(--color-paper);
+  --color-success: var(--color-green);
+  --color-success-foreground: var(--color-ink);
+  --color-border: var(--color-ink);
+  --color-input: var(--color-ink);
+  --color-ring: var(--color-blue);
 
-    /* --- Tokens sémantiques (primitives shadcn/ui) ------------------------ */
-    --background: var(--cream);
-    --foreground: var(--ink);
+  /* --- Formes ----------------------------------------------------------- */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-blob: 1.75rem;
+  --radius-capsule: 999px;
 
-    --card: var(--paper);
-    --card-foreground: var(--ink);
+  /* --- Ombres DURES ----------------------------------------------------- */
+  --shadow-toy: 0 3px 0 var(--color-ink);
+  --shadow-toy-md: 0 6px 0 var(--color-ink);
+  --shadow-toy-lg: 0 9px 0 var(--color-ink);
+  /* Variante décalée en diagonale, pour les cartes posées de travers. */
+  --shadow-toy-card: 5px 6px 0 var(--color-ink);
 
-    --popover: var(--paper);
-    --popover-foreground: var(--ink);
+  /* --- Typographie ------------------------------------------------------ */
+  --font-display: var(--font-display-family), system-ui, sans-serif;
+  --font-sans: var(--font-sans-family), system-ui, sans-serif;
 
-    --primary: var(--red);
-    --primary-foreground: 48 100% 99%;
+  /* --- Espacements complémentaires (hauteurs de boutons) ---------------- */
+  --spacing-13: 3.25rem;
+  --spacing-15: 3.75rem;
+  --spacing-17: 4.25rem;
 
-    --secondary: var(--cream-deep);
-    --secondary-foreground: var(--ink);
+  /* --- Motion : court et expressif ------------------------------------- */
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-    --muted: var(--cream-deep);
-    --muted-foreground: var(--ink-soft);
+  /* --- Animations ------------------------------------------------------- */
+  --animate-pop-in: pop-in var(--motion-base) var(--ease-pop) both;
+  --animate-squash: squash var(--motion-base) ease-out;
+  --animate-ring-pop: ring-pop 1.1s ease-out infinite;
+  --animate-shake: shake 300ms ease-in-out;
+  --animate-wiggle: wiggle 2.2s ease-in-out infinite;
+  --animate-bob: bob 2.4s ease-in-out infinite;
+  --animate-confetti-fall: confetti-fall 2.4s linear forwards;
 
-    --accent: var(--yellow);
-    --accent-foreground: var(--ink);
-
-    --destructive: var(--red);
-    --destructive-foreground: 48 100% 99%;
-
-    --success: var(--green);
-    --success-foreground: var(--ink);
-
-    --border: var(--ink);
-    --input: var(--ink);
-    --ring: var(--blue);
-
-    /* --- Formes ----------------------------------------------------------- */
-    --radius: 1.25rem;
-    --radius-blob: 1.75rem;
-    --radius-capsule: 999px;
-
-    --border-thin: 2px;
-    --border-thick: 3px;
-    --border-chunky: 4px;
-
-    /* --- Ombres DURES ----------------------------------------------------- */
-    --shadow-sm: 0 3px 0 hsl(var(--ink));
-    --shadow-md: 0 6px 0 hsl(var(--ink));
-    --shadow-lg: 0 9px 0 hsl(var(--ink));
-    /* Variante décalée en diagonale, pour les cartes posées de travers. */
-    --shadow-card: 5px 6px 0 hsl(var(--ink));
-
-    /* --- Motion : court et expressif ------------------------------------- */
-    --motion-tap: 100ms;
-    --motion-fast: 160ms;
-    --motion-base: 220ms;
-    --motion-slow: 300ms;
-    --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  @keyframes pop-in {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    65% {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
-  * {
-    @apply border-border;
+  @keyframes squash {
+    0% {
+      transform: scaleX(1) scaleY(1);
+    }
+    35% {
+      transform: scaleX(1.08) scaleY(0.9);
+    }
+    70% {
+      transform: scaleX(0.97) scaleY(1.04);
+    }
+    100% {
+      transform: scaleX(1) scaleY(1);
+    }
+  }
+
+  @keyframes ring-pop {
+    0% {
+      transform: scale(0.95);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.16);
+      opacity: 0;
+    }
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-5px) rotate(-1.5deg);
+    }
+    50% {
+      transform: translateX(5px) rotate(1.5deg);
+    }
+    75% {
+      transform: translateX(-3px);
+    }
+  }
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(-2.5deg);
+    }
+    50% {
+      transform: rotate(2.5deg);
+    }
+  }
+
+  @keyframes bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(-10vh) rotate(0deg);
+    }
+    100% {
+      transform: translateY(105vh) rotate(420deg);
+    }
+  }
+}
+
+/*
+ * Variables hors thème : durées de transition et épaisseurs de contour, elles
+ * ne génèrent pas d'utilitaires mais sont consommées par les classes maison.
+ */
+:root {
+  --motion-tap: 100ms;
+  --motion-fast: 160ms;
+  --motion-base: 220ms;
+  --motion-slow: 300ms;
+
+  --border-thin: 2px;
+  --border-thick: 3px;
+  --border-chunky: 4px;
+}
+
+/* Durées de transition nommées. */
+@utility duration-tap {
+  transition-duration: var(--motion-tap);
+}
+
+@utility duration-fast {
+  transition-duration: var(--motion-fast);
+}
+
+@utility duration-base {
+  transition-duration: var(--motion-base);
+}
+
+@utility duration-slow {
+  transition-duration: var(--motion-slow);
+}
+
+@layer base {
+  /*
+   * Tailwind v4 réinitialise `border-color` à `currentColor` : on rétablit
+   * l'encre comme couleur de contour par défaut, socle de toute l'identité.
+   */
+  *,
+  ::after,
+  ::before {
+    border-color: var(--color-ink);
   }
 
   html {
     -webkit-tap-highlight-color: transparent;
-    background-color: hsl(var(--cream));
+    background-color: var(--color-cream);
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
@@ -112,12 +240,15 @@
   h2,
   h3,
   .font-display {
-    font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+    font-family: var(--font-display);
   }
 
   /* Focus très visible sur fond clair. */
   :focus-visible {
-    @apply outline-none ring-4 ring-ring ring-offset-2 ring-offset-background;
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--color-background),
+      0 0 0 6px var(--color-ring);
   }
 
   button,
@@ -127,8 +258,8 @@
   }
 
   ::selection {
-    background-color: hsl(var(--yellow));
-    color: hsl(var(--ink));
+    background-color: var(--color-yellow);
+    color: var(--color-ink);
   }
 }
 
@@ -138,20 +269,20 @@
    * ---------------------------------------------------------------------- */
   .toy-surface {
     border-width: var(--border-thick);
-    border-color: hsl(var(--ink));
-    box-shadow: var(--shadow-md);
+    border-color: var(--color-ink);
+    box-shadow: var(--shadow-toy-md);
   }
 
   .toy-surface-sm {
     border-width: var(--border-thin);
-    border-color: hsl(var(--ink));
-    box-shadow: var(--shadow-sm);
+    border-color: var(--color-ink);
+    box-shadow: var(--shadow-toy);
   }
 
   .toy-surface-lg {
     border-width: var(--border-chunky);
-    border-color: hsl(var(--ink));
-    box-shadow: var(--shadow-lg);
+    border-color: var(--color-ink);
+    box-shadow: var(--shadow-toy-lg);
   }
 
   /*
@@ -167,33 +298,33 @@
 
   .toy-press:active:not(:disabled) {
     transform: translateY(4px);
-    box-shadow: 0 1px 0 hsl(var(--ink)) !important;
+    box-shadow: 0 1px 0 var(--color-ink) !important;
   }
 
   @media (hover: hover) {
     .toy-press:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
+      box-shadow: var(--shadow-toy-lg);
     }
   }
 
   /* Titre massif : contour d'encre net, aucune lueur. */
   .toy-title {
-    font-family: var(--font-display), system-ui, sans-serif;
+    font-family: var(--font-display);
     font-weight: 800;
     line-height: 0.92;
     letter-spacing: -0.01em;
     /* Contour dessiné au text-shadow : net, sans flou. */
     text-shadow:
-      2px 0 0 hsl(var(--ink)),
-      -2px 0 0 hsl(var(--ink)),
-      0 2px 0 hsl(var(--ink)),
-      0 -2px 0 hsl(var(--ink)),
-      2px 2px 0 hsl(var(--ink)),
-      -2px 2px 0 hsl(var(--ink)),
-      2px -2px 0 hsl(var(--ink)),
-      -2px -2px 0 hsl(var(--ink)),
-      0 6px 0 hsl(var(--ink));
+      2px 0 0 var(--color-ink),
+      -2px 0 0 var(--color-ink),
+      0 2px 0 var(--color-ink),
+      0 -2px 0 var(--color-ink),
+      2px 2px 0 var(--color-ink),
+      -2px 2px 0 var(--color-ink),
+      2px -2px 0 var(--color-ink),
+      -2px -2px 0 var(--color-ink),
+      0 6px 0 var(--color-ink);
   }
 
   /*
@@ -201,16 +332,20 @@
    * le contour d'encre n'aurait aucun sens — on garde juste la masse.
    */
   .toy-title-ink {
-    font-family: var(--font-display), system-ui, sans-serif;
+    font-family: var(--font-display);
     font-weight: 800;
     line-height: 0.92;
     letter-spacing: -0.01em;
-    color: hsl(var(--ink));
+    color: var(--color-ink);
   }
 
   /* Étiquette de section. */
   .toy-label {
-    @apply text-xs font-extrabold uppercase tracking-[0.16em] text-muted-foreground;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--color-muted-foreground);
   }
 }
 

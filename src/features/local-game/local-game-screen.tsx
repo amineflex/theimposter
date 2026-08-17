@@ -117,7 +117,7 @@ function SetupStep({ onStart }: { onStart: () => void }) {
   const { players, setPlayers, start } = useLocalGame()
   const savedNames = usePreferences((state) => state.localPlayerNames)
   const lastSettings = usePreferences((state) => state.lastSettings)
-  const [settings, setSettings] = React.useState(lastSettings)
+  const [draftSettings, setDraftSettings] = React.useState(lastSettings)
 
   // Pré-remplit avec les joueurs de la dernière partie locale.
   React.useEffect(() => {
@@ -129,12 +129,15 @@ function SetupStep({ onStart }: { onStart: () => void }) {
   const duplicates = new Set(filled.map((name) => name.toLowerCase())).size !== filled.length
   const playerCount = Math.max(filled.length, MIN_PLAYERS)
 
-  // Les réglages mémorisés peuvent viser une autre taille de table : on les
-  // réaligne sur la composition recommandée quand le nombre de joueurs change.
-  React.useEffect(() => {
-    setSettings((current) => reconcileSettings(current, playerCount))
-  }, [playerCount])
-
+  /**
+   * Les réglages mémorisés peuvent viser une autre taille de table (1 Undercover
+   * + 1 Mr. White à 6 joueurs, impossible à 3) : on DÉRIVE la composition valide
+   * du brouillon, sans jamais corriger l'état depuis un effet.
+   */
+  const settings = React.useMemo(
+    () => reconcileSettings(draftSettings, playerCount),
+    [draftSettings, playerCount],
+  )
   const settingsValid = validateSettings(settings, playerCount).ok
   const canStart = filled.length >= MIN_PLAYERS && !duplicates && settingsValid
 
@@ -213,7 +216,7 @@ function SetupStep({ onStart }: { onStart: () => void }) {
         )}
       </section>
 
-      <SettingsPanel settings={settings} onChange={setSettings} playerCount={playerCount} />
+      <SettingsPanel settings={settings} onChange={setDraftSettings} playerCount={playerCount} />
 
       <PartyButton
         variant="red"

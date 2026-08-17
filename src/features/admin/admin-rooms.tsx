@@ -26,7 +26,6 @@ export function AdminRooms() {
   const [rooms, setRooms] = React.useState<AdminRoom[] | null>(null)
 
   const load = React.useCallback(async () => {
-    setRooms(null)
     try {
       const result = await api.get<{ rooms: AdminRoom[] }>('/api/admin/rooms')
       setRooms(result.rooms)
@@ -36,9 +35,22 @@ export function AdminRooms() {
     }
   }, [])
 
+  // Le chargement initial se fait dans une fonction asynchrone : l'écriture
+  // d'état a lieu après l'`await`, jamais dans le corps de l'effet.
   React.useEffect(() => {
-    void load()
-  }, [load])
+    let cancelled = false
+    void (async () => {
+      try {
+        const result = await api.get<{ rooms: AdminRoom[] }>('/api/admin/rooms')
+        if (!cancelled) setRooms(result.rooms)
+      } catch {
+        if (!cancelled) setRooms([])
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const act = async (roomId: string, action: 'cancel' | 'expire') => {
     try {

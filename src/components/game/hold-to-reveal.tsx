@@ -61,7 +61,7 @@ export function HoldToReveal({ duration = 700, onRevealed, label, className }: H
       animate={holding ? { scale: [1, 1.03, 1.01] } : { scale: 1 }}
       transition={{ duration: 0.24 }}
       className={cn(
-        'no-select relative flex h-52 w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-blob border-5 border-ink bg-yellow text-center shadow-toy-lg transition-colors duration-fast',
+        'no-select relative flex h-52 w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-blob border-4 border-ink bg-yellow text-center shadow-toy-lg transition-colors duration-fast',
         holding && 'bg-orange',
         className,
       )}

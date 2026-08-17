@@ -24,17 +24,18 @@ export function RoomCode({ code, className }: RoomCodeProps) {
   const [copied, setCopied] = React.useState(false)
   const [qrOpen, setQrOpen] = React.useState(false)
   const [qrDataUrl, setQrDataUrl] = React.useState<string | null>(null)
-  const [origin, setOrigin] = React.useState('')
+  const [qrUrl, setQrUrl] = React.useState('')
 
-  React.useEffect(() => {
-    setOrigin(window.location.origin)
-  }, [])
-
-  const joinUrl = origin ? `${origin}/join/${code}` : `/join/${code}`
+  /**
+   * L'URL de partage dépend du navigateur : on la calcule au moment de l'action
+   * (copie, partage, QR) plutôt que dans un effet — pas d'état inutile, et aucun
+   * risque de divergence entre le rendu serveur et le client.
+   */
+  const buildJoinUrl = () => `${window.location.origin}/join/${code}`
 
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(joinUrl)
+      await navigator.clipboard.writeText(buildJoinUrl())
       play('pop')
       setCopied(true)
       toast.success(t('common.copied'))
@@ -53,7 +54,7 @@ export function RoomCode({ code, className }: RoomCodeProps) {
       await navigator.share({
         title: 'The Imposter',
         text: `Rejoins ma partie de The Imposter (code ${code})`,
-        url: joinUrl,
+        url: buildJoinUrl(),
       })
     } catch {
       // Partage annulé par l'utilisateur : rien à signaler.
@@ -63,8 +64,10 @@ export function RoomCode({ code, className }: RoomCodeProps) {
   const openQr = async () => {
     setQrOpen(true)
     if (qrDataUrl) return
+    const target = buildJoinUrl()
+    setQrUrl(target)
     const QRCode = (await import('qrcode')).default
-    const url = await QRCode.toDataURL(joinUrl, {
+    const url = await QRCode.toDataURL(target, {
       width: 512,
       margin: 1,
       color: { dark: '#202020', light: '#fffdf5' },
@@ -114,7 +117,7 @@ export function RoomCode({ code, className }: RoomCodeProps) {
           ) : (
             <div className="h-[260px] w-[260px] rounded-blob border-3 border-ink bg-paper" />
           )}
-          <p className="break-all text-center text-xs font-bold text-ink-soft">{joinUrl}</p>
+          <p className="break-all text-center text-xs font-bold text-ink-soft">{qrUrl}</p>
         </div>
       </PopModal>
     </div>

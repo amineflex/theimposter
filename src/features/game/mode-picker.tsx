@@ -66,7 +66,7 @@ export function ModePicker({
               transition={{ type: 'spring', stiffness: 560, damping: 18 }}
               className={cn(
                 'relative flex min-h-[148px] flex-col items-center justify-center gap-2 rounded-blob border-3 border-ink p-3 text-center shadow-toy-md transition-colors duration-fast',
-                selected ? cn(entry.selectedTone, 'border-5 shadow-toy-lg') : entry.tone,
+                selected ? cn(entry.selectedTone, 'border-4 shadow-toy-lg') : entry.tone,
                 disabled && 'opacity-60',
               )}
             >

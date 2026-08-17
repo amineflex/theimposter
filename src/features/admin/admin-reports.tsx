@@ -22,7 +22,6 @@ export function AdminReports() {
   const [reports, setReports] = React.useState<ReportRow[] | null>(null)
 
   const load = React.useCallback(async () => {
-    setReports(null)
     const { data, error } = await getSupabaseBrowserClient()
       .from('reports')
       .select('*')
@@ -36,9 +35,27 @@ export function AdminReports() {
     setReports((data ?? []) as ReportRow[])
   }, [])
 
+  // Chargement initial : l'écriture d'état a lieu après l'`await`.
   React.useEffect(() => {
-    void load()
-  }, [load])
+    let cancelled = false
+    void (async () => {
+      const { data, error } = await getSupabaseBrowserClient()
+        .from('reports')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(100)
+      if (cancelled) return
+      if (error) {
+        toast.error('Chargement impossible.')
+        setReports([])
+        return
+      }
+      setReports((data ?? []) as ReportRow[])
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const setStatus = async (id: string, status: ReportRow['status']) => {
     try {

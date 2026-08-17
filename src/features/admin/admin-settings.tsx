@@ -31,9 +31,17 @@ export function AdminSettings() {
     setSettings((data ?? []) as SettingRow[])
   }, [])
 
+  // Chargement initial : l'écriture d'état a lieu après l'`await`.
   React.useEffect(() => {
-    void load()
-  }, [load])
+    let cancelled = false
+    void (async () => {
+      const { data } = await getSupabaseBrowserClient().from('app_settings').select('*').order('key')
+      if (!cancelled) setSettings((data ?? []) as SettingRow[])
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const save = async (key: string, value: unknown) => {
     setSavingKey(key)

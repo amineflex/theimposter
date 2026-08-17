@@ -10,16 +10,16 @@ import { cn } from '@/lib/utils'
 export type DecorShape = 'star' | 'dot' | 'triangle' | 'diamond' | 'burst' | 'wave'
 
 const TONE: Record<string, string> = {
-  yellow: 'hsl(var(--yellow))',
-  red: 'hsl(var(--red))',
-  blue: 'hsl(var(--blue))',
-  green: 'hsl(var(--green))',
-  pink: 'hsl(var(--pink))',
-  orange: 'hsl(var(--orange))',
-  purple: 'hsl(var(--purple))',
-  ink: 'hsl(var(--ink))',
-  paper: 'hsl(var(--paper))',
-  cream: 'hsl(var(--cream-deep))',
+  yellow: 'var(--color-yellow)',
+  red: 'var(--color-red)',
+  blue: 'var(--color-blue)',
+  green: 'var(--color-green)',
+  pink: 'var(--color-pink)',
+  orange: 'var(--color-orange)',
+  purple: 'var(--color-purple)',
+  ink: 'var(--color-ink)',
+  paper: 'var(--color-paper)',
+  cream: 'var(--color-cream-deep)',
 }
 
 export function Shape({
@@ -38,7 +38,7 @@ export function Shape({
   rotate?: number
 }) {
   const fill = TONE[tone] ?? TONE.yellow
-  const stroke = outlined ? 'hsl(var(--ink))' : 'none'
+  const stroke = outlined ? 'var(--color-ink)' : 'none'
 
   return (
     <svg

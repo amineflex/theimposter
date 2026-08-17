@@ -88,15 +88,19 @@ function CreateRoomForm() {
   const [name, setName] = React.useState(lastName)
   const [visibility, setVisibility] = React.useState<'private' | 'public'>('private')
   const [maxPlayers, setMaxPlayers] = React.useState(8)
-  const [settings, setSettings] = React.useState(lastSettings)
+  const [draftSettings, setDraftSettings] = React.useState(lastSettings)
   const [submitting, setSubmitting] = React.useState(false)
 
   const nameCheck = playerNameSchema.safeParse(name)
 
-  // La composition suit le nombre de joueurs annoncé.
-  React.useEffect(() => {
-    setSettings((current) => reconcileSettings(current, maxPlayers))
-  }, [maxPlayers])
+  /**
+   * La composition doit rester valide pour la taille de table annoncée : on la
+   * DÉRIVE du brouillon au rendu, plutôt que de la corriger dans un effet.
+   */
+  const settings = React.useMemo(
+    () => reconcileSettings(draftSettings, maxPlayers),
+    [draftSettings, maxPlayers],
+  )
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -150,7 +154,7 @@ function CreateRoomForm() {
 
       <ModePicker
         value={settings.mode}
-        onChange={(mode) => setSettings((current) => reconcileSettings({ ...current, mode }, maxPlayers))}
+        onChange={(mode) => setDraftSettings({ ...settings, mode })}
       />
 
       <fieldset>
@@ -177,7 +181,7 @@ function CreateRoomForm() {
 
       <SettingsPanel
         settings={settings}
-        onChange={setSettings}
+        onChange={setDraftSettings}
         playerCount={maxPlayers}
         hideMode
       />
@@ -210,9 +214,21 @@ function JoinSection() {
     }
   }, [])
 
+  // Chargement initial : l'écriture d'état a lieu après l'`await`.
   React.useEffect(() => {
-    void loadRooms()
-  }, [loadRooms])
+    let cancelled = false
+    void (async () => {
+      try {
+        const result = await api.get<{ rooms: PublicRoom[] }>('/api/rooms/public')
+        if (!cancelled) setRooms(result.rooms)
+      } catch {
+        if (!cancelled) setRooms([])
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   return (
     <div className="space-y-8">

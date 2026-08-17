@@ -18,8 +18,8 @@ export interface PlayerAvatarProps {
   dimmed?: boolean
 }
 
-const INK = 'hsl(var(--ink))'
-const PAPER = 'hsl(var(--paper))'
+const INK = 'var(--color-ink)'
+const PAPER = 'var(--color-paper)'
 
 /**
  * Avatar : un blob tout simple, en aplat, avec contour d'encre.
@@ -40,13 +40,13 @@ export function PlayerAvatar({ avatarKey, name, size = 'md', className, dimmed }
         {/* Corps : blob légèrement irrégulier, jamais un cercle parfait. */}
         <path
           d="M32 5c14 0 24 9.6 24 22.5 0 5-1.4 8.6-1.4 12.2 0 7.6-9 14.3-22.6 14.3S9.4 47.3 9.4 39.7C9.4 36.1 8 32.5 8 27.5C8 14.6 18 5 32 5z"
-          fill={`hsl(${avatar.color})`}
+          fill={avatar.color}
           stroke={INK}
           strokeWidth="3"
           strokeLinejoin="round"
         />
         <Face face={avatar.face} />
-        <Accessory accessory={avatar.accessory} color={`hsl(${avatar.color})`} />
+        <Accessory accessory={avatar.accessory} color={avatar.color} />
       </svg>
     </span>
   )
@@ -100,7 +100,7 @@ function Face({ face }: { face: BlobFace }) {
           <path d="M24 41c4 4.4 12 4.4 16 0" stroke={INK} strokeWidth="3" fill="none" strokeLinecap="round" />
           <path
             d="M29 44h7c0 4-1.6 6-3.5 6S29 48 29 44z"
-            fill="hsl(var(--pink))"
+            fill="var(--color-pink)"
             stroke={INK}
             strokeWidth="2.2"
             strokeLinejoin="round"
@@ -151,26 +151,26 @@ function Accessory({ accessory, color }: { accessory: BlobAccessory; color: stri
         <g>
           <path
             d="M11 20c2-9 10-14 21-14s19 5 21 14z"
-            fill="hsl(var(--blue))"
+            fill="var(--color-blue)"
             stroke={INK}
             strokeWidth="3"
             strokeLinejoin="round"
           />
           <path
             d="M11 20h-6c0-3 2-5 6-5z"
-            fill="hsl(var(--blue))"
+            fill="var(--color-blue)"
             stroke={INK}
             strokeWidth="2.6"
             strokeLinejoin="round"
           />
-          <circle cx="32" cy="7" r="3" fill="hsl(var(--yellow))" stroke={INK} strokeWidth="2.2" />
+          <circle cx="32" cy="7" r="3" fill="var(--color-yellow)" stroke={INK} strokeWidth="2.2" />
         </g>
       )
     case 'antenna':
       return (
         <g>
           <path d="M32 6V-1" stroke={INK} strokeWidth="3" strokeLinecap="round" />
-          <circle cx="32" cy="1" r="4.5" fill="hsl(var(--yellow))" stroke={INK} strokeWidth="2.6" />
+          <circle cx="32" cy="1" r="4.5" fill="var(--color-yellow)" stroke={INK} strokeWidth="2.6" />
         </g>
       )
     case 'mustache':
@@ -192,14 +192,14 @@ function Accessory({ accessory, color }: { accessory: BlobAccessory; color: stri
         <g>
           <path
             d="M46 12l8-5 1 10z"
-            fill="hsl(var(--red))"
+            fill="var(--color-red)"
             stroke={INK}
             strokeWidth="2.4"
             strokeLinejoin="round"
           />
           <path
             d="M46 12l9 4-8 5z"
-            fill="hsl(var(--red))"
+            fill="var(--color-red)"
             stroke={INK}
             strokeWidth="2.4"
             strokeLinejoin="round"

@@ -17,11 +17,14 @@ export function usePhaseTicker(
   refresh: (options?: { silent?: boolean }) => Promise<void>,
 ) {
   const pending = React.useRef(false)
-  const jitter = React.useRef(Math.random() * 900)
+  // Décalage aléatoire tiré dans l'effet : `Math.random()` est impur et n'a rien
+  // à faire pendant le rendu.
+  const jitter = React.useRef(0)
 
   React.useEffect(() => {
     if (!game || game.is_paused || !game.phase_ends_at || game.finished_at) return
     if (game.phase === 'results') return
+    if (jitter.current === 0) jitter.current = Math.random() * 900
 
     const check = async () => {
       const endsAt = new Date(game.phase_ends_at as string).getTime()

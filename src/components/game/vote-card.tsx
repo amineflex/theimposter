@@ -44,7 +44,7 @@ export function VoteCard({ name, avatarKey, selected, disabled, onSelect, index 
       aria-label={`Voter contre ${name}`}
       className={cn(
         'flex min-h-[118px] flex-col items-center justify-center gap-1.5 rounded-blob border-3 border-ink p-2 text-center shadow-toy-md transition-colors duration-fast',
-        selected ? 'border-5 bg-yellow shadow-toy-lg' : 'bg-paper',
+        selected ? 'border-4 bg-yellow shadow-toy-lg' : 'bg-paper',
         disabled && 'cursor-not-allowed opacity-45',
       )}
     >

@@ -57,14 +57,15 @@ a une dernière chance : deviner le mot des Civils pour gagner immédiatement.
 
 | Couche | Technologie |
 |---|---|
-| Framework | Next.js 15 (App Router), React 19, TypeScript strict |
-| Style | Tailwind CSS 3 + design system maison « party game », Lucide, Framer Motion |
+| Framework | Next.js 16 (App Router, Turbopack), React 19.2, TypeScript 6 strict |
+| Style | Tailwind CSS 4 (thème en CSS) + design system maison « party game », Lucide, Framer Motion 13 |
 | État client | Zustand (préférences + moteur local) |
-| Validation | Zod (client **et** serveur) |
+| Validation | Zod 4 (client **et** serveur) |
 | Base de données | Supabase / PostgreSQL, Row Level Security |
 | Temps réel | Supabase Realtime (`postgres_changes`) |
 | Auth | Supabase Anonymous Auth (joueurs), email/mot de passe (admins) |
-| Tests | Vitest (unitaires + scénarios), Playwright (E2E) |
+| Tests | Vitest 4 (unitaires + scénarios), Playwright (E2E) |
+| Lint | ESLint 9 en configuration « flat » (`eslint.config.mjs`) |
 | Hébergement | Vercel (front + API), Supabase (données) |
 
 Aucune dépendance externe n'est requise à l'exécution pour le mode local :
@@ -161,16 +162,19 @@ Règles tenues dans tout le projet :
 - ombres **franches** uniquement (`0 6px 0 ink`), jamais diffuses,
 - 2 à 3 couleurs dominantes par écran, la couleur structure l'information.
 
-Tous les tokens (palette, rayons, contours, ombres, durées) vivent dans
-`src/app/globals.css` et sont exposés à Tailwind via `tailwind.config.ts` :
-aucun composant n'écrit une couleur ou une ombre en dur.
+Tous les tokens (palette, rayons, ombres, animations, typographies) vivent dans
+le bloc `@theme` de `src/app/globals.css`. Depuis Tailwind 4 il n'y a **plus de
+`tailwind.config.ts`** : chaque variable du thème génère ses utilitaires
+(`--color-yellow` → `bg-yellow`, `text-yellow`, …), et aucun composant n'écrit
+une couleur ou une ombre en dur. Les SVG (avatars, décor, logo) consomment
+directement `var(--color-*)`.
 
 | Token | Valeur |
 |---|---|
 | `--cream` / `--paper` | fond de scène / surfaces de cartes |
 | `--ink` / `--ink-soft` | contours et textes |
 | `--red` `--yellow` `--blue` `--green` `--pink` `--orange` `--purple` | accents |
-| `--shadow-sm/md/lg` | `0 3px 0`, `0 6px 0`, `0 9px 0` en encre |
+| `--shadow-toy/-md/-lg` | `0 3px 0`, `0 6px 0`, `0 9px 0` en encre |
 | `--motion-tap/fast/base/slow` | 100 / 160 / 220 / 300 ms |
 
 Les boutons s'enfoncent réellement (`translateY(4px)` + ombre écrasée), les
@@ -182,7 +186,8 @@ volontairement sobre et classique.
 
 ## 4. Installation
 
-Prérequis : **Node.js ≥ 20**, un projet **Supabase** (gratuit suffit).
+Prérequis : **Node.js ≥ 20.9** (exigé par Next.js 16), un projet **Supabase**
+(l'offre gratuite suffit).
 
 ```bash
 npm install
@@ -220,8 +225,11 @@ Le mode en ligne et l'administration nécessitent les variables ci-dessous.
 3. **Authentication → Providers → Email** : activer (comptes admin).
 4. Récupérer dans **Project Settings → API** : *Project URL*, *anon key*,
    *service_role key* → les placer dans `.env.local`.
-5. Exécuter les migrations puis le seed (sections suivantes).
-6. Créer un administrateur :
+5. **Exécuter les migrations puis le seed** (sections [7](#7-migrations) et
+   [8](#8-seed-de-la-base-de-mots)) — indispensable avant l'étape suivante :
+   c'est la migration qui crée les tables, dont `admins`.
+6. Créer un administrateur (**après** la migration, sinon
+   `ERROR: relation "admins" does not exist`) :
    - **Authentication → Users → Add user** (email + mot de passe, « Auto
      confirm user »),
    - puis, dans le **SQL Editor** :
@@ -230,6 +238,9 @@ Le mode en ligne et l'administration nécessitent les variables ci-dessous.
    insert into admins (user_id, email)
    select id, email from auth.users where email = 'vous@example.com';
    ```
+
+   > Si la requête renvoie « 0 rows », c'est que l'utilisateur n'existe pas encore
+   > dans **Authentication → Users** : créez-le d'abord.
 
 7. **Database → Replication** : vérifier que la publication `supabase_realtime`
    contient bien `rooms`, `room_players`, `games`, `game_player_status`,
@@ -251,6 +262,9 @@ supabase db push
 
 Copier-coller le contenu de `supabase/migrations/20250101000000_init.sql` dans
 le SQL Editor du dashboard, puis exécuter.
+
+> ⚠️ À exécuter **une seule fois** : la migration crée des types (`create type`)
+> et échouerait au second passage. Le seed, lui, est rejouable (`on conflict`).
 
 La migration crée : les enums, 19 tables, les index, les contraintes, les
 politiques RLS, les vues publiques (`game_public_state`, `public_rooms`), les
@@ -308,7 +322,7 @@ npm run dev            # serveur de développement
 npm run build          # build de production
 npm start              # serveur de production
 npm run typecheck      # TypeScript strict, sans émission
-npm run lint           # ESLint (config Next.js)
+npm run lint           # ESLint 9 (flat config) — n'est plus lancé par `next build`
 npm run test           # tests unitaires (Vitest)
 npm run test:e2e       # tests E2E (Playwright)
 npm run seed:generate  # régénère supabase/seed.sql depuis src/data
@@ -317,6 +331,9 @@ npm run icons          # régénère les icônes PWA et l'image OpenGraph
 
 Le service worker n'est **pas** enregistré en développement, afin que le cache
 ne masque pas les changements de code.
+
+> Next.js 16 a supprimé `next lint` et ne lint plus pendant le build : pensez à
+> exécuter `npm run lint` en CI, avant `npm run build`.
 
 ---
 
@@ -406,7 +423,7 @@ Les tests tournent en profils **mobile (Pixel 7)** et **desktop**, sans Supabase
 - [ ] Au moins un compte dans la table `admins`
 - [ ] `NEXT_PUBLIC_SITE_URL` = URL de production
 - [ ] Cron `/api/cron/cleanup` planifié (quotidien sur Hobby)
-- [ ] `npm run build`, `npm run lint` et `npm run test` verts
+- [ ] `npm run build`, `npm run lint`, `npm run test` et `npm audit` verts
 
 ---
 

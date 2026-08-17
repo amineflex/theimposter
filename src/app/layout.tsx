@@ -11,7 +11,7 @@ import { t } from '@/i18n'
 const display = Baloo_2({
   subsets: ['latin', 'latin-ext'],
   weight: ['600', '700', '800'],
-  variable: '--font-display',
+  variable: '--font-display-family',
   display: 'swap',
 })
 
@@ -19,7 +19,7 @@ const display = Baloo_2({
 const sans = Nunito({
   subsets: ['latin', 'latin-ext'],
   weight: ['400', '600', '700', '800'],
-  variable: '--font-sans',
+  variable: '--font-sans-family',
   display: 'swap',
 })
 
@@ -100,11 +100,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           position="top-center"
           toastOptions={{
             style: {
-              background: 'hsl(var(--paper))',
-              color: 'hsl(var(--ink))',
-              border: '3px solid hsl(var(--ink))',
+              background: 'var(--color-paper)',
+              color: 'var(--color-ink)',
+              border: '3px solid var(--color-ink)',
               borderRadius: '1.25rem',
-              boxShadow: '0 5px 0 hsl(var(--ink))',
+              boxShadow: '0 5px 0 var(--color-ink)',
               fontWeight: 700,
             },
           }}
