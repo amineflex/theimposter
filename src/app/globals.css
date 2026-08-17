@@ -1,0 +1,276 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===========================================================================
+ * DESIGN TOKENS — The Imposter
+ *
+ * Direction : party game de console. Fond crème, aplats de couleurs franches,
+ * contours d'encre épais, ombres DURES (jamais floues), typographie ronde.
+ *
+ * Règles absolues :
+ *  - aucun gradient (ni linear, ni radial, ni conic),
+ *  - aucun flou (blur / backdrop-filter),
+ *  - aucun glow ni néon,
+ *  - aucune transparence décorative.
+ * Toute valeur de couleur, ombre, rayon ou durée vit ici.
+ * ======================================================================== */
+
+@layer base {
+  :root {
+    /* --- Base ------------------------------------------------------------- */
+    --cream: 43 100% 95%; /* #FFF8E7 */
+    --cream-deep: 42 78% 89%; /* fond alternatif, un ton plus soutenu */
+    --paper: 48 100% 99%; /* surfaces de cartes, presque blanc chaud */
+    --ink: 0 0% 13%; /* #202020 — contours et texte */
+    --ink-soft: 0 0% 34%; /* texte secondaire */
+
+    /* --- Palette d'accent (aplats uniquement) ----------------------------- */
+    --red: 4 85% 58%; /* #F04438 */
+    --yellow: 46 100% 65%; /* #FFD84D */
+    --blue: 212 71% 59%; /* #4A90E2 */
+    --green: 112 50% 55%; /* #61C454 */
+    --pink: 330 80% 69%; /* #F06FAF */
+    --orange: 28 100% 61%; /* #FF9638 */
+    --purple: 255 57% 64%; /* #8B6FD6 */
+
+    /* --- Modes de jeu (menus uniquement) ---------------------------------- */
+    --mode-impostor: var(--red);
+    --mode-undercover: var(--blue);
+
+    /* --- Tokens sémantiques (primitives shadcn/ui) ------------------------ */
+    --background: var(--cream);
+    --foreground: var(--ink);
+
+    --card: var(--paper);
+    --card-foreground: var(--ink);
+
+    --popover: var(--paper);
+    --popover-foreground: var(--ink);
+
+    --primary: var(--red);
+    --primary-foreground: 48 100% 99%;
+
+    --secondary: var(--cream-deep);
+    --secondary-foreground: var(--ink);
+
+    --muted: var(--cream-deep);
+    --muted-foreground: var(--ink-soft);
+
+    --accent: var(--yellow);
+    --accent-foreground: var(--ink);
+
+    --destructive: var(--red);
+    --destructive-foreground: 48 100% 99%;
+
+    --success: var(--green);
+    --success-foreground: var(--ink);
+
+    --border: var(--ink);
+    --input: var(--ink);
+    --ring: var(--blue);
+
+    /* --- Formes ----------------------------------------------------------- */
+    --radius: 1.25rem;
+    --radius-blob: 1.75rem;
+    --radius-capsule: 999px;
+
+    --border-thin: 2px;
+    --border-thick: 3px;
+    --border-chunky: 4px;
+
+    /* --- Ombres DURES ----------------------------------------------------- */
+    --shadow-sm: 0 3px 0 hsl(var(--ink));
+    --shadow-md: 0 6px 0 hsl(var(--ink));
+    --shadow-lg: 0 9px 0 hsl(var(--ink));
+    /* Variante décalée en diagonale, pour les cartes posées de travers. */
+    --shadow-card: 5px 6px 0 hsl(var(--ink));
+
+    /* --- Motion : court et expressif ------------------------------------- */
+    --motion-tap: 100ms;
+    --motion-fast: 160ms;
+    --motion-base: 220ms;
+    --motion-slow: 300ms;
+    --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    background-color: hsl(var(--cream));
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+  }
+
+  /* Focus très visible sur fond clair. */
+  :focus-visible {
+    @apply outline-none ring-4 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  button,
+  [role='button'],
+  a {
+    touch-action: manipulation;
+  }
+
+  ::selection {
+    background-color: hsl(var(--yellow));
+    color: hsl(var(--ink));
+  }
+}
+
+@layer components {
+  /* ------------------------------------------------------------------------
+   * Surface de jeu : aplat + contour d'encre + ombre dure.
+   * ---------------------------------------------------------------------- */
+  .toy-surface {
+    border-width: var(--border-thick);
+    border-color: hsl(var(--ink));
+    box-shadow: var(--shadow-md);
+  }
+
+  .toy-surface-sm {
+    border-width: var(--border-thin);
+    border-color: hsl(var(--ink));
+    box-shadow: var(--shadow-sm);
+  }
+
+  .toy-surface-lg {
+    border-width: var(--border-chunky);
+    border-color: hsl(var(--ink));
+    box-shadow: var(--shadow-lg);
+  }
+
+  /*
+   * Bouton physique : au doigt, il descend de 4px et son ombre disparaît —
+   * exactement la sensation d'une touche de jouet.
+   */
+  .toy-press {
+    transition:
+      transform var(--motion-tap) ease-out,
+      box-shadow var(--motion-tap) ease-out,
+      background-color var(--motion-fast) ease-out;
+  }
+
+  .toy-press:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 hsl(var(--ink)) !important;
+  }
+
+  @media (hover: hover) {
+    .toy-press:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+  }
+
+  /* Titre massif : contour d'encre net, aucune lueur. */
+  .toy-title {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    /* Contour dessiné au text-shadow : net, sans flou. */
+    text-shadow:
+      2px 0 0 hsl(var(--ink)),
+      -2px 0 0 hsl(var(--ink)),
+      0 2px 0 hsl(var(--ink)),
+      0 -2px 0 hsl(var(--ink)),
+      2px 2px 0 hsl(var(--ink)),
+      -2px 2px 0 hsl(var(--ink)),
+      2px -2px 0 hsl(var(--ink)),
+      -2px -2px 0 hsl(var(--ink)),
+      0 6px 0 hsl(var(--ink));
+  }
+
+  /*
+   * Variante encre : pour un titre écrit directement en noir sur le fond crème,
+   * le contour d'encre n'aurait aucun sens — on garde juste la masse.
+   */
+  .toy-title-ink {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    color: hsl(var(--ink));
+  }
+
+  /* Étiquette de section. */
+  .toy-label {
+    @apply text-xs font-extrabold uppercase tracking-[0.16em] text-muted-foreground;
+  }
+}
+
+@layer utilities {
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .safe-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .safe-top {
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Petites inclinaisons : casse la grille, donne l'air « posé à la main ». */
+  .tilt-left {
+    transform: rotate(-1.8deg);
+  }
+
+  .tilt-right {
+    transform: rotate(1.8deg);
+  }
+
+  .tilt-left-sm {
+    transform: rotate(-1deg);
+  }
+
+  .tilt-right-sm {
+    transform: rotate(1deg);
+  }
+}
+
+/* prefers-reduced-motion : plus d'animation ni de déplacement, mais les états
+ * restent visuellement distincts (couleur, contour, ombre). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .toy-press:hover:not(:disabled),
+  .toy-press:active:not(:disabled) {
+    transform: none;
+  }
+
+  .tilt-left,
+  .tilt-right,
+  .tilt-left-sm,
+  .tilt-right-sm {
+    transform: none;
+  }
+}
