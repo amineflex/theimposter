@@ -416,14 +416,36 @@ Les tests tournent en profils **mobile (Pixel 7)** et **desktop**, sans Supabase
    > curl -H "Authorization: Bearer $CRON_SECRET" https://votre-domaine/api/cron/cleanup
    > ```
 
+### Diagnostic : « le mode en ligne ne fonctionne pas »
+
+Ouvrez **`/api/health`** sur le déploiement (ou en local) : l'endpoint liste ce
+qui manque, sans divulguer aucun secret.
+
+```bash
+curl -s https://votre-domaine/api/health | python3 -m json.tool
+```
+
+| Vérification | Si ❌ |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` / `ANON_KEY` | Variables absentes → ajoutez-les **et redéployez** (elles sont figées au build) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Variable serveur absente → aucune partie ne peut être créée |
+| Migration appliquée | Exécutez `supabase/migrations/20250101000000_init.sql` |
+| Base de mots | Exécutez `supabase/seed.sql` |
+| Connexions anonymes | Activez **Anonymous sign-ins** (Authentication → Sign In / Providers) |
+| Inscriptions autorisées | Réactivez les inscriptions : sans elles, pas de session anonyme |
+
+La vérification des connexions anonymes **lit** le réglage (`/auth/v1/settings`)
+au lieu de tenter une connexion : appeler ce diagnostic ne crée aucun compte.
+
 ### Checklist de mise en production
 
-- [ ] Anonymous sign-ins activé dans Supabase
+- [ ] Anonymous sign-ins activé dans Supabase (sinon : « Connexion impossible »)
 - [ ] Migrations exécutées, seed injecté (884 entrées)
 - [ ] Au moins un compte dans la table `admins`
 - [ ] `NEXT_PUBLIC_SITE_URL` = URL de production
 - [ ] Cron `/api/cron/cleanup` planifié (quotidien sur Hobby)
 - [ ] `npm run build`, `npm run lint`, `npm run test` et `npm audit` verts
+- [ ] `/api/health` répond `"ok": true`
 
 ---
 

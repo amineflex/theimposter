@@ -6,7 +6,7 @@ import { Countdown } from '@/components/party/countdown'
 import { PlayerAvatar } from '@/components/game/player-avatar'
 import { MrWhiteGuessForm } from '@/features/game/mr-white-guess-form'
 import { HostControls } from './host-controls'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { useCountdown } from '@/hooks/use-countdown'
 import { useSound } from '@/hooks/use-sound'
 import { buildPlayerViews, type RoomViewModel } from '../room-context'
@@ -65,7 +65,7 @@ export function MrWhiteView({ room }: { room: RoomViewModel }) {
           await room.refresh({ silent: true })
           return result.correct
         } catch (error) {
-          toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+          toast.error(describeError(error, t('error.network')))
           return false
         }
       }}

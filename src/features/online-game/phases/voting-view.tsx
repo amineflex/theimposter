@@ -10,7 +10,7 @@ import { Countdown } from '@/components/party/countdown'
 import { VoteCard } from '@/components/game/vote-card'
 import { MyWordReminder } from './my-word-reminder'
 import { HostControls } from './host-controls'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { useCountdown } from '@/hooks/use-countdown'
 import { useSound } from '@/hooks/use-sound'
 import { buildPlayerViews, playersInGame, type RoomViewModel } from '../room-context'
@@ -50,7 +50,7 @@ export function VotingView({ room }: { room: RoomViewModel }) {
       toast.success(t('vote.done'))
       await room.refresh({ silent: true })
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     } finally {
       setSubmitting(false)
     }

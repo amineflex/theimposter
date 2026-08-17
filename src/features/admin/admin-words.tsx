@@ -16,7 +16,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { EmptyState, LoadingState } from '@/components/game/states'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { PACKS } from '@/data/packs'
 import { DIFFICULTIES, type Difficulty } from '@/lib/game-engine/types'
 import { t } from '@/i18n'
@@ -88,7 +88,7 @@ export function AdminWords() {
       setItems(result.items)
       setTotal(result.total)
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : 'Chargement impossible.')
+      toast.error(describeError(error, 'Chargement impossible.'))
       setItems([])
     }
   }, [kind, page, search, difficulty, pack])
@@ -111,7 +111,7 @@ export function AdminWords() {
         setTotal(result.total)
       } catch (error) {
         if (cancelled) return
-        toast.error(error instanceof ApiClientError ? error.message : 'Chargement impossible.')
+        toast.error(describeError(error, 'Chargement impossible.'))
         setItems([])
       }
     })()
@@ -155,7 +155,7 @@ export function AdminWords() {
       setForm(null)
       await load()
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : "Enregistrement impossible.")
+      toast.error(describeError(error, "Enregistrement impossible."))
     } finally {
       setSaving(false)
     }
@@ -166,7 +166,7 @@ export function AdminWords() {
       await api.patch('/api/admin/words', { kind, id: item.id, data: { isActive: !item.is_active } })
       await load()
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : 'Modification impossible.')
+      toast.error(describeError(error, 'Modification impossible.'))
     }
   }
 
@@ -176,7 +176,7 @@ export function AdminWords() {
       await api.delete('/api/admin/words', { kind, id: item.id })
       await load()
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : 'Suppression impossible.')
+      toast.error(describeError(error, 'Suppression impossible.'))
     }
   }
 

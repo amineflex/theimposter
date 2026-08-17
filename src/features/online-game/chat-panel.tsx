@@ -5,7 +5,7 @@ import { MessageCircle, Send } from 'lucide-react'
 import { toast } from 'sonner'
 import { PartyButton } from '@/components/party/party-button'
 import { PlayerAvatar } from '@/components/game/player-avatar'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { ALLOWED_REACTIONS } from '@/lib/chat-reactions'
 import { cn } from '@/lib/utils'
 import { t } from '@/i18n'
@@ -38,7 +38,7 @@ export function ChatPanel({ room, className }: { room: RoomViewModel; className?
       if (kind === 'text') setBody('')
       await room.refresh({ silent: true })
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     } finally {
       setSending(false)
     }

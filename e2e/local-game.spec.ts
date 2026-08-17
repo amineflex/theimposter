@@ -20,7 +20,6 @@ test.describe('mode local', () => {
     await page.goto('/local')
     await fillPlayers(page, ['Adam'])
     await expect(page.getByRole('button', { name: /Distribuer les rôles/i })).toBeDisabled()
-    await expect(page.getByText(/Ajoutez au moins 3 joueurs/i)).toBeVisible()
   })
 
   test('deux joueurs de même nom sont refusés', async ({ page }) => {

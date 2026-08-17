@@ -8,7 +8,7 @@ import { toast } from 'sonner'
 import { PartyButton } from '@/components/party/party-button'
 import { ErrorState } from '@/components/game/states'
 import { Shape } from '@/components/party/decor'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { ensureAnonymousSession, isOnlineConfigured } from '@/lib/supabase/client'
 import { isValidRoomCode } from '@/lib/room-code'
 import { playerNameSchema } from '@/lib/validations/schemas'
@@ -60,7 +60,7 @@ export function JoinRoomForm({ code }: { code: string }) {
       setLastPlayerName(nameCheck.data)
       router.push(`/room/${code}`)
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     } finally {
       setSubmitting(false)
     }

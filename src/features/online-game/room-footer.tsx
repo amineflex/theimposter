@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 import { PartyButton } from '@/components/party/party-button'
 import { PopModal } from '@/components/party/pop-modal'
 import { SoundToggle } from '@/components/layout/sound-toggle'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { t } from '@/i18n'
 import type { RoomViewModel } from './room-context'
 
@@ -55,7 +55,7 @@ export function RoomFooter({ room }: { room: RoomViewModel }) {
       setReason('')
       setDetails('')
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     } finally {
       setSending(false)
     }

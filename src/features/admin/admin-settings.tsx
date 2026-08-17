@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { LoadingState } from '@/components/game/states'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 
 interface SettingRow {
@@ -50,7 +50,7 @@ export function AdminSettings() {
       toast.success('Réglage enregistré.')
       await load()
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : 'Enregistrement impossible.')
+      toast.error(describeError(error, 'Enregistrement impossible.'))
     } finally {
       setSavingKey(null)
     }

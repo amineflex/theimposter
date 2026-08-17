@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 import { GameResult, type ResultPlayerView } from '@/features/game/game-result'
 import { LoadingState } from '@/components/game/states'
 import { ChatPanel } from '../chat-panel'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import { usePreferences } from '@/stores/preferences-store'
 import { useSound } from '@/hooks/use-sound'
@@ -77,7 +77,7 @@ export function ResultsView({ room }: { room: RoomViewModel }) {
       await api.post('/api/room/reopen', { roomId: room.room.id })
       await room.refresh({ silent: true })
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     } finally {
       setReopening(false)
     }
@@ -90,7 +90,7 @@ export function ResultsView({ room }: { room: RoomViewModel }) {
       await api.post('/api/room/rematch', { roomId: room.room.id, excludeWordIds: wordHistory })
       await room.refresh({ silent: true })
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     } finally {
       setReplaying(false)
     }

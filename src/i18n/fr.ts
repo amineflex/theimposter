@@ -217,7 +217,6 @@ export const fr = {
   'local.playerName': 'Nom du joueur {index}',
   'local.remove': 'Retirer',
   'local.start': 'Distribuer les rôles',
-  'local.needPlayers': 'Ajoutez au moins {min} joueurs.',
   'local.duplicateName': 'Deux joueurs ne peuvent pas avoir le même nom.',
   'local.quit': 'Quitter la partie',
   'local.quitConfirm': 'Abandonner la partie en cours ?',

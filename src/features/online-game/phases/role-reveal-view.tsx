@@ -11,7 +11,7 @@ import { PlayerBubble } from '@/components/party/player-bubble'
 import { RoleRevealCard } from '@/components/party/role-reveal-card'
 import { HoldToReveal } from '@/components/game/hold-to-reveal'
 import { LoadingState } from '@/components/game/states'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { useCountdown } from '@/hooks/use-countdown'
 import { useSound } from '@/hooks/use-sound'
 import { buildPlayerViews, playersInGame, type RoomViewModel } from '../room-context'
@@ -39,7 +39,7 @@ export function RoleRevealView({ room }: { room: RoomViewModel }) {
       await api.post('/api/game/reveal', { gameId: room.game.id })
       await room.refresh({ silent: true })
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     } finally {
       setConfirming(false)
     }

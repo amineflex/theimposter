@@ -4,7 +4,7 @@ import * as React from 'react'
 import { FastForward, Pause, Play } from 'lucide-react'
 import { toast } from 'sonner'
 import { PartyButton } from '@/components/party/party-button'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { t } from '@/i18n'
 import type { RoomViewModel } from '../room-context'
 
@@ -24,7 +24,7 @@ export function HostControls({ room }: { room: RoomViewModel }) {
       await action()
       await room.refresh({ silent: true })
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     } finally {
       setBusy(false)
     }

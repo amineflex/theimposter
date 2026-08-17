@@ -11,7 +11,7 @@ import { GameBanner } from '@/components/party/game-banner'
 import { EmptyState, ErrorState } from '@/components/game/states'
 import { SettingsPanel } from '@/features/game/settings-panel'
 import { BigStepper, ModePicker } from '@/features/game/mode-picker'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { ensureAnonymousSession, isOnlineConfigured } from '@/lib/supabase/client'
 import { isValidRoomCode, normalizeRoomCode, ROOM_CODE_LENGTH } from '@/lib/room-code'
 import { usePreferences } from '@/stores/preferences-store'
@@ -122,7 +122,7 @@ function CreateRoomForm() {
       setLastSettings(settings)
       router.push(`/room/${result.code}`)
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     } finally {
       setSubmitting(false)
     }

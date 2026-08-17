@@ -9,7 +9,7 @@ import { DiscussionBoard } from '@/features/game/discussion-board'
 import { ChatPanel } from '../chat-panel'
 import { HostControls } from './host-controls'
 import { MyWordReminder } from './my-word-reminder'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { useCountdown } from '@/hooks/use-countdown'
 import { useSound } from '@/hooks/use-sound'
 import { buildPlayerViews, playersInGame, type RoomViewModel } from '../room-context'
@@ -42,7 +42,7 @@ export function DiscussionView({ room }: { room: RoomViewModel }) {
       await api.post('/api/game/advance', { gameId: game.id })
       await room.refresh({ silent: true })
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     } finally {
       setSubmitting(false)
     }

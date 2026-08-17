@@ -55,3 +55,16 @@ export const api = {
   patch: <T>(path: string, body?: unknown) => request<T>('PATCH', path, body ?? {}),
   delete: <T>(path: string, body?: unknown) => request<T>('DELETE', path, body ?? {}),
 }
+
+/**
+ * Message affichable pour n'importe quelle erreur remontée par une action.
+ *
+ * Le message générique « connexion impossible » est réservé aux VRAIES pannes
+ * réseau : toute autre erreur (session, configuration, règle métier) conserve
+ * son message, sinon la cause réelle est masquée à l'utilisateur.
+ */
+export function describeError(error: unknown, fallback = 'Une erreur est survenue. Réessayez.'): string {
+  if (error instanceof ApiClientError) return error.message
+  if (error instanceof Error && error.message) return error.message
+  return fallback
+}

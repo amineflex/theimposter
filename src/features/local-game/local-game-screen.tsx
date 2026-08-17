@@ -211,9 +211,6 @@ function SetupStep({ onStart }: { onStart: () => void }) {
             {t('local.duplicateName')}
           </p>
         )}
-        {filled.length < MIN_PLAYERS && (
-          <p className="text-xs font-bold text-ink-soft">{t('local.needPlayers', { min: MIN_PLAYERS })}</p>
-        )}
       </section>
 
       <SettingsPanel settings={settings} onChange={setDraftSettings} playerCount={playerCount} />

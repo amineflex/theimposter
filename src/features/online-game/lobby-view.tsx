@@ -13,7 +13,7 @@ import { RoomCode } from '@/components/game/room-code'
 import { SettingsPanel } from '@/features/game/settings-panel'
 import { ChatPanel } from './chat-panel'
 import { buildPlayerViews, type RoomViewModel } from './room-context'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { usePreferences } from '@/stores/preferences-store'
 import { useSound } from '@/hooks/use-sound'
 import { compositionFromSettings, validateSettings } from '@/lib/game-engine/roles'
@@ -62,7 +62,7 @@ export function LobbyView({ room }: { room: RoomViewModel }) {
       })
       await room.refresh({ silent: true })
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     } finally {
       setStarting(false)
     }
@@ -81,7 +81,7 @@ export function LobbyView({ room }: { room: RoomViewModel }) {
       setSettingsOpen(false)
       await room.refresh({ silent: true })
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     } finally {
       setSavingSettings(false)
     }
@@ -92,7 +92,7 @@ export function LobbyView({ room }: { room: RoomViewModel }) {
       await api.post('/api/room/kick', { roomId: room.room!.id, playerId })
       await room.refresh({ silent: true })
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     }
   }
 
@@ -101,7 +101,7 @@ export function LobbyView({ room }: { room: RoomViewModel }) {
       await api.post('/api/room/cancel', { roomId: room.room!.id })
       router.push('/')
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : t('error.network'))
+      toast.error(describeError(error, t('error.network')))
     }
   }
 

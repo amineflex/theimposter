@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { EmptyState, LoadingState } from '@/components/game/states'
-import { api, ApiClientError } from '@/lib/api/client'
+import { api, describeError } from '@/lib/api/client'
 import { t } from '@/i18n'
 
 interface AdminRoom {
@@ -30,7 +30,7 @@ export function AdminRooms() {
       const result = await api.get<{ rooms: AdminRoom[] }>('/api/admin/rooms')
       setRooms(result.rooms)
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : 'Chargement impossible.')
+      toast.error(describeError(error, 'Chargement impossible.'))
       setRooms([])
     }
   }, [])
@@ -57,7 +57,7 @@ export function AdminRooms() {
       await api.post('/api/admin/rooms', { roomId, action })
       await load()
     } catch (error) {
-      toast.error(error instanceof ApiClientError ? error.message : 'Action impossible.')
+      toast.error(describeError(error, 'Action impossible.'))
     }
   }
 
