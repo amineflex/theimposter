@@ -374,17 +374,30 @@ Les tests tournent en profils **mobile (Pixel 7)** et **desktop**, sans Supabase
    `NEXT_PUBLIC_`).
 3. Déployer, puis mettre `NEXT_PUBLIC_SITE_URL` à l'URL finale et redéployer
    (utilisée pour les liens de partage, les QR codes et les métadonnées OG).
-4. Nettoyage automatique des rooms — créer `vercel.json` à la racine :
+4. Nettoyage automatique des rooms — `vercel.json` est déjà fourni à la racine :
 
    ```json
    {
-     "crons": [{ "path": "/api/cron/cleanup", "schedule": "0 * * * *" }]
+     "crons": [{ "path": "/api/cron/cleanup", "schedule": "0 4 * * *" }]
    }
    ```
 
    Vercel Cron envoie automatiquement l'en-tête
-   `Authorization: Bearer $CRON_SECRET`. Sans plan Cron, appeler l'endpoint
-   depuis n'importe quel ordonnanceur externe avec le même en-tête.
+   `Authorization: Bearer $CRON_SECRET`.
+
+   > **Plan Hobby** : un seul déclenchement par jour est autorisé, d'où le
+   > `0 4 * * *` (04:00 UTC). C'est suffisant, car le nettoyage n'est que de
+   > l'entretien de base : l'expiration est **aussi vérifiée à la demande**
+   > (`/api/room/join` refuse une room dépassée, et la vue `public_rooms` filtre
+   > sur `expires_at > now()`). Une room morte n'est donc jamais rejoignable ni
+   > visible, même avant le passage du cron.
+   >
+   > Pour un nettoyage plus fréquent (plan Pro, ou ordonnanceur externe type
+   > GitHub Actions / cron-job.org / Supabase pg_cron), appeler simplement :
+   >
+   > ```bash
+   > curl -H "Authorization: Bearer $CRON_SECRET" https://votre-domaine/api/cron/cleanup
+   > ```
 
 ### Checklist de mise en production
 
@@ -392,7 +405,7 @@ Les tests tournent en profils **mobile (Pixel 7)** et **desktop**, sans Supabase
 - [ ] Migrations exécutées, seed injecté (884 entrées)
 - [ ] Au moins un compte dans la table `admins`
 - [ ] `NEXT_PUBLIC_SITE_URL` = URL de production
-- [ ] Cron `/api/cron/cleanup` planifié
+- [ ] Cron `/api/cron/cleanup` planifié (quotidien sur Hobby)
 - [ ] `npm run build`, `npm run lint` et `npm run test` verts
 
 ---
@@ -573,8 +586,10 @@ Clients A, B, C ◀── événement ── useRoom() ── relit game_public_
 | Room `expired` / `finished` / `cancelled` depuis > 24 h | suppression (cascade sur joueurs, parties, votes, chat, mots personnalisés) |
 
 Appliqué par la fonction SQL `cleanup_rooms()`, appelée par
-`GET /api/cron/cleanup` (protégée par `CRON_SECRET`), planifiée toutes les
-heures. Les mots personnalisés d'une partie vivent dans la ligne `games` et
+`GET /api/cron/cleanup` (protégée par `CRON_SECRET`), planifiée une fois par jour
+(limite du plan Vercel Hobby ; augmenter la fréquence si besoin). Le cron ne fait
+que de l'entretien : l'expiration est vérifiée à chaque tentative de join et la
+liste des parties publiques filtre déjà sur `expires_at`. Les mots personnalisés d'une partie vivent dans la ligne `games` et
 disparaissent donc avec la room.
 
 ---
