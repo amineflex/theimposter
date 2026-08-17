@@ -43,11 +43,11 @@ Deux modes : **Imposteur** et **Undercover**. 3 à 12 joueurs.
 | **PWA** | Installable, mode local jouable hors connexion |
 | **Thème** | Clair unique (crème + aplats colorés) |
 
-**Mode Imposteur** — tout le monde connaît le même mot secret, sauf l'imposteur
+**Mode Imposteur**  ·  tout le monde connaît le même mot secret, sauf l'imposteur
 qui ne reçoit qu'un indice général (`Girafe` → indice `Animal`). Chacun décrit
 son mot ; les joueurs votent pour démasquer l'intrus.
 
-**Mode Undercover** — les Civils ont un mot, l'Undercover un mot voisin
+**Mode Undercover**  ·  les Civils ont un mot, l'Undercover un mot voisin
 (`Coca-Cola` / `Pepsi`), et Mr. White n'a aucun mot. S'il est éliminé, Mr. White
 a une dernière chance : deviner le mot des Civils pour gagner immédiatement.
 
@@ -226,7 +226,7 @@ Le mode en ligne et l'administration nécessitent les variables ci-dessous.
 4. Récupérer dans **Project Settings → API** : *Project URL*, *anon key*,
    *service_role key* → les placer dans `.env.local`.
 5. **Exécuter les migrations puis le seed** (sections [7](#7-migrations) et
-   [8](#8-seed-de-la-base-de-mots)) — indispensable avant l'étape suivante :
+   [8](#8-seed-de-la-base-de-mots))  ·  indispensable avant l'étape suivante :
    c'est la migration qui crée les tables, dont `admins`.
 6. Créer un administrateur (**après** la migration, sinon
    `ERROR: relation "admins" does not exist`) :
@@ -250,7 +250,7 @@ Le mode en ligne et l'administration nécessitent les variables ci-dessous.
 
 ## 7. Migrations
 
-**Option A — Supabase CLI (recommandé)**
+**Option A  ·  Supabase CLI (recommandé)**
 
 ```bash
 npm i -g supabase
@@ -258,10 +258,13 @@ supabase link --project-ref <votre-ref>
 supabase db push
 ```
 
-**Option B — SQL Editor**
+**Option B  ·  SQL Editor**
 
-Copier-coller le contenu de `supabase/migrations/20250101000000_init.sql` dans
-le SQL Editor du dashboard, puis exécuter.
+Copier-coller le contenu de chaque migration dans le SQL Editor du dashboard,
+**dans l'ordre**, puis exécuter :
+
+1. `supabase/migrations/20250101000000_init.sql`  ·  schéma complet
+2. `supabase/migrations/20250102000000_descriptions.sql`  ·  descriptions écrites
 
 > ⚠️ À exécuter **une seule fois** : la migration crée des types (`create type`)
 > et échouerait au second passage. Le seed, lui, est rejouable (`on conflict`).
@@ -322,7 +325,7 @@ npm run dev            # serveur de développement
 npm run build          # build de production
 npm start              # serveur de production
 npm run typecheck      # TypeScript strict, sans émission
-npm run lint           # ESLint 9 (flat config) — n'est plus lancé par `next build`
+npm run lint           # ESLint 9 (flat config)  ·  n'est plus lancé par `next build`
 npm run test           # tests unitaires (Vitest)
 npm run test:e2e       # tests E2E (Playwright)
 npm run seed:generate  # régénère supabase/seed.sql depuis src/data
@@ -339,7 +342,7 @@ ne masque pas les changements de code.
 
 ## 10. Tests
 
-### Unitaires et scénarios (Vitest) — 116 tests
+### Unitaires et scénarios (Vitest)  ·  116 tests
 
 | Fichier | Couverture |
 |---|---|
@@ -367,7 +370,7 @@ subsiste après le passage) → descriptions → vote hot-seat → résultat et
 élimination, plus la page hors connexion.
 
 `e2e/visual-tour.spec.ts` parcourt les mêmes écrans en enregistrant une capture
-de chacun — pratique pour relire le rendu mobile après un changement de design :
+de chacun  ·  pratique pour relire le rendu mobile après un changement de design :
 
 ```bash
 SHOTS_DIR=./captures npx playwright test visual-tour --project=mobile
@@ -391,7 +394,7 @@ Les tests tournent en profils **mobile (Pixel 7)** et **desktop**, sans Supabase
    `NEXT_PUBLIC_`).
 3. Déployer, puis mettre `NEXT_PUBLIC_SITE_URL` à l'URL finale et redéployer
    (utilisée pour les liens de partage, les QR codes et les métadonnées OG).
-4. Nettoyage automatique des rooms — `vercel.json` est déjà fourni à la racine :
+4. Nettoyage automatique des rooms  ·  `vercel.json` est déjà fourni à la racine :
 
    ```json
    {
@@ -430,6 +433,7 @@ curl -s https://votre-domaine/api/health | python3 -m json.tool
 | `NEXT_PUBLIC_SUPABASE_URL` / `ANON_KEY` | Variables absentes → ajoutez-les **et redéployez** (elles sont figées au build) |
 | `SUPABASE_SERVICE_ROLE_KEY` | Variable serveur absente → aucune partie ne peut être créée |
 | Migration appliquée | Exécutez `supabase/migrations/20250101000000_init.sql` |
+| Descriptions écrites | Exécutez `supabase/migrations/20250102000000_descriptions.sql` |
 | Base de mots | Exécutez `supabase/seed.sql` |
 | Connexions anonymes | Activez **Anonymous sign-ins** (Authentication → Sign In / Providers) |
 | Inscriptions autorisées | Réactivez les inscriptions : sans elles, pas de session anonyme |
@@ -453,15 +457,21 @@ au lieu de tenter une connexion : appeler ce diagnostic ne crée aucun compte.
 
 ### Déroulement
 
-1. **Distribution** — chaque joueur consulte son rôle (appui maintenu).
-2. **Descriptions** — chacun décrit son mot à son tour, sans le prononcer.
+1. **Distribution**  ·  chaque joueur consulte son rôle (appui maintenu).
+2. **Descriptions**  ·  chacun décrit son mot à son tour, sans le prononcer.
    1, 2, 3 passes ou discussion libre ; minuteur configurable.
-3. **Vote** — chaque joueur vivant vote (jamais pour soi-même). Les votes sont
+   **En ligne, la description s'écrit** dans un champ dédié (120 caractères) :
+   valider l'envoie et passe la parole au joueur suivant. Le serveur refuse une
+   description qui contient le mot de son auteur, et une seule description est
+   acceptée par joueur et par passe.
+3. **Vote**  ·  chaque joueur vivant vote (jamais pour soi-même). Les votes sont
    **secrets** : seul le compteur « x / y joueurs ont voté » est visible.
-4. **Résultat** — les votes sont révélés, le joueur majoritaire est éliminé.
+   L'**historique complet des descriptions** (tous les tours) est affiché
+   au-dessus des cartes de vote, pour relire qui a écrit quoi.
+4. **Résultat**  ·  les votes sont révélés, le joueur majoritaire est éliminé.
    En cas d'égalité, un **barrage** est organisé entre les joueurs à égalité ;
    si l'égalité persiste, le sort tranche (garantie de terminaison).
-5. **Mr. White** — s'il est éliminé, il tente de deviner le mot des Civils.
+5. **Mr. White**  ·  s'il est éliminé, il tente de deviner le mot des Civils.
 6. La partie continue jusqu'à ce qu'une condition de victoire soit remplie.
 
 ### Conditions de victoire
@@ -540,28 +550,28 @@ route handlers `/api/*`, qui :
 
 ### Protections spécifiques
 
-- **Changement de phase** — `/api/game/advance` n'accepte une transition que si
+- **Changement de phase**  ·  `/api/game/advance` n'accepte une transition que si
   le minuteur est écoulé, s'il s'agit d'une phase d'affichage automatique, si
   c'est l'orateur courant qui termine, ou si l'hôte force. La table de
   transitions rejette tout le reste.
-- **Concurrence** — la colonne `games.version` sert de verrou optimiste
+- **Concurrence**  ·  la colonne `games.version` sert de verrou optimiste
   (`update … where version = $lu`) : si deux clients avancent la partie au même
   instant, une seule écriture passe, l'autre reçoit un conflit sans effet de
   bord (double élimination impossible).
-- **Double vote** — index unique `(game_id, round, runoff, voter_id)` :
+- **Double vote**  ·  index unique `(game_id, round, runoff, voter_id)` :
   garanti même en cas de requêtes simultanées. Auto-vote refusé par une
   contrainte SQL **et** par le moteur.
-- **Mr. White** — la vérification de la devinette est faite côté serveur ; le
+- **Mr. White**  ·  la vérification de la devinette est faite côté serveur ; le
   mot attendu ne quitte jamais le serveur avant la fin de la partie.
-- **Anti-abus** — `rate_limit_hit()` en SQL, par utilisateur et par action :
+- **Anti-abus**  ·  `rate_limit_hit()` en SQL, par utilisateur et par action :
   création de room (8/h), join (30/10 min), chat (20/min), réactions (30/min),
   votes, avances de phase, signalements (5/h).
-- **Codes de room** — 6 caractères d'un alphabet de 25 symboles sans caractères
+- **Codes de room**  ·  6 caractères d'un alphabet de 25 symboles sans caractères
   ambigus (≈ 244 M combinaisons) ; les tentatives de join sont limitées.
-- **Admin** — double garde : le composant serveur vérifie la session **et** la
+- **Admin**  ·  double garde : le composant serveur vérifie la session **et** la
   table `admins`, chaque route `/api/admin/*` refait la vérification, et les
   politiques RLS d'écriture du catalogue exigent `is_admin()`.
-- **Erreurs** — aucun message PostgreSQL brut n'atteint le joueur : les erreurs
+- **Erreurs**  ·  aucun message PostgreSQL brut n'atteint le joueur : les erreurs
   sont traduites en messages compréhensibles (`lib/api/http.ts`).
 
 ### Mode local
@@ -602,7 +612,7 @@ Clients A, B, C ◀── événement ── useRoom() ── relit game_public_
 - **Reconnexion** : `useRoom` resynchronise au retour d'onglet, au retour du
   réseau, et via un filet de sécurité toutes les 15 s. Le joueur retrouve sa
   room, son identité, son rôle, son état vivant/éliminé, la phase courante et
-  son vote — tout est rechargé depuis le serveur.
+  son vote  ·  tout est rechargé depuis le serveur.
 - **AFK / minuteurs** : `phase_ends_at` est une échéance absolue. N'importe quel
   client peut appeler `/api/game/tick` ; le serveur revérifie l'échéance et le
   verrou optimiste empêche les doubles avances. Un décalage aléatoire par client
@@ -637,17 +647,17 @@ disparaissent donc avec la room.
 
 L'architecture est prête pour ces évolutions, **non développées** en V1 :
 
-- **Comptes et profils** — `profiles` existe déjà et est adossé à `auth.users` ;
+- **Comptes et profils**  ·  `profiles` existe déjà et est adossé à `auth.users` ;
   passer d'une session anonyme à un compte ne change ni la RLS ni le moteur.
-- **Statistiques, XP, niveaux, classement** — `analytics_events` collecte déjà
+- **Statistiques, XP, niveaux, classement**  ·  `analytics_events` collecte déjà
   les agrégats anonymes (`game_created`, `game_started`, `game_finished`, mode,
   nombre de joueurs, durée, packs, difficulté, vainqueur).
-- **Amis, invitations, historique** — les rooms et les parties sont déjà
+- **Amis, invitations, historique**  ·  les rooms et les parties sont déjà
   historisées par `room_id` / `game_id`.
-- **Nouveaux rôles** — ajouter une entrée dans `ROLE_META` (`lib/game-engine/roles.ts`)
+- **Nouveaux rôles**  ·  ajouter une entrée dans `ROLE_META` (`lib/game-engine/roles.ts`)
   et sa règle dans `win.ts` ; le reste du moteur, l'UI et le schéma (enum
   `player_role`) suivent sans réécriture.
-- **Packs communautaires / génération IA** — le catalogue est déjà
+- **Packs communautaires / génération IA**  ·  le catalogue est déjà
   multi-packs (`packs`, `pack_impostor_words`, `pack_word_pairs`) et administrable.
-- **Autres langues** — créer `src/i18n/en.ts` avec les mêmes clés et
+- **Autres langues**  ·  créer `src/i18n/en.ts` avec les mêmes clés et
   l'enregistrer dans `DICTIONARIES` ; aucun composant n'écrit de texte en dur.

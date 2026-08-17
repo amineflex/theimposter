@@ -150,7 +150,7 @@ test('tournée visuelle du mode local', async ({ page }) => {
  * À 3 joueurs (2 civils + 1 intrus), une seule élimination termine forcément la
  * partie : c'est le chemin le plus court vers l'écran de fin.
  */
-test('tournée visuelle — écran de fin', async ({ page }) => {
+test('tournée visuelle  ·  écran de fin', async ({ page }) => {
   const trio = ['Adam', 'Sarah', 'Rayan']
   await page.goto('/local')
   const inputs = page.getByPlaceholder(/Nom du joueur/i)

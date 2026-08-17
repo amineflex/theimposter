@@ -30,9 +30,9 @@ const categories = Array.from(
 const lines: string[] = []
 
 lines.push('-- ===========================================================================')
-lines.push('-- The Imposter — seed de la base de mots (FRANÇAIS)')
+lines.push('-- The Imposter  ·  seed de la base de mots (FRANÇAIS)')
 lines.push('--')
-lines.push('-- FICHIER GÉNÉRÉ AUTOMATIQUEMENT — ne pas éditer à la main.')
+lines.push('-- FICHIER GÉNÉRÉ AUTOMATIQUEMENT  ·  ne pas éditer à la main.')
 lines.push('-- Source : src/data/impostor-words.ts, src/data/word-pairs.ts, src/data/packs.ts')
 lines.push('-- Régénérer avec : npm run seed:generate')
 lines.push('--')

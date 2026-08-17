@@ -204,7 +204,7 @@ export interface Assignment {
  * Chaque joueur reçoit un poids `1 / (1 + 1.5 * rôles spéciaux récents)`.
  * Les rôles spéciaux sont tirés sans remise par échantillonnage pondéré : un
  * joueur qui vient d'être imposteur a moins de chances de l'être à nouveau,
- * mais cela reste possible — l'attribution n'est jamais prédictible.
+ * mais cela reste possible  ·  l'attribution n'est jamais prédictible.
  */
 export function assignRoles(input: AssignmentInput): Assignment[] {
   const rng = input.rng ?? Math.random

@@ -13,7 +13,7 @@ import { castVoteAction } from '@/lib/game/service'
 import { voteSchema } from '@/lib/validations/schemas'
 
 /**
- * POST /api/game/vote — enregistre un vote secret.
+ * POST /api/game/vote  ·  enregistre un vote secret.
  *
  * Le vote n'est jamais renvoyé aux autres joueurs : la RLS de `votes` limite la
  * lecture à sa propre ligne jusqu'à la fin de la partie, et l'UI n'affiche que

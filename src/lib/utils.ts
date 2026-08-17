@@ -15,7 +15,7 @@ export function formatSeconds(total: number): string {
 }
 
 export function formatDuration(seconds: number | null | undefined): string {
-  if (!seconds || seconds <= 0) return '—'
+  if (!seconds || seconds <= 0) return ' · '
   const minutes = Math.floor(seconds / 60)
   const rest = Math.round(seconds % 60)
   if (minutes === 0) return `${rest} s`

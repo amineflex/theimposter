@@ -9,7 +9,7 @@ import {
 import type { GamePlayerRow } from '@/types/db'
 
 /**
- * GET /api/game/me?gameId=… — renvoie UNIQUEMENT le rôle et le mot de
+ * GET /api/game/me?gameId=…  ·  renvoie UNIQUEMENT le rôle et le mot de
  * l'appelant.
  *
  * C'est le seul endroit où une information secrète quitte le serveur, et elle

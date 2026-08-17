@@ -15,7 +15,7 @@ import { createRoomSchema } from '@/lib/validations/schemas'
 import { validateSettings } from '@/lib/game-engine/roles'
 import type { RoomRow } from '@/types/db'
 
-/** POST /api/room/create — crée une room et y installe l'hôte. */
+/** POST /api/room/create  ·  crée une room et y installe l'hôte. */
 export async function POST(request: Request) {
   return handle(async () => {
     const userId = await requireUserId()

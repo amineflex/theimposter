@@ -12,7 +12,7 @@ import {
 import { updateSettingsSchema } from '@/lib/validations/schemas'
 import { validateSettings } from '@/lib/game-engine/roles'
 
-/** POST /api/room/settings — l'hôte modifie la configuration (lobby uniquement). */
+/** POST /api/room/settings  ·  l'hôte modifie la configuration (lobby uniquement). */
 export async function POST(request: Request) {
   return handle(async () => {
     const userId = await requireUserId()

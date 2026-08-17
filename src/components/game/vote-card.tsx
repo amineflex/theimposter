@@ -15,7 +15,7 @@ export interface VoteCardProps {
 
 /**
  * Tuile de vote : grosse cible tactile en aplat. Sélectionnée, elle monte,
- * pivote légèrement et son contour s'épaissit — l'état ne dépend jamais
+ * pivote légèrement et son contour s'épaissit  ·  l'état ne dépend jamais
  * uniquement de la couleur (le mot « choisi » est écrit).
  */
 export function VoteCard({ name, avatarKey, selected, disabled, onSelect, index = 0 }: VoteCardProps) {

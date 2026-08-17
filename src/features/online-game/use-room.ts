@@ -6,6 +6,7 @@ import { ensureAnonymousSession, getSupabaseBrowserClient } from '@/lib/supabase
 import { api } from '@/lib/api/client'
 import type {
   ChatMessageRow,
+  GameDescriptionRow,
   GamePlayerStatusRow,
   GamePublicStateRow,
   RoomPlayerRow,
@@ -26,6 +27,8 @@ export interface RoomSnapshot {
   players: RoomPlayerRow[]
   game: GamePublicStateRow | null
   statuses: GamePlayerStatusRow[]
+  /** Descriptions écrites de la partie en cours, du plus ancien au plus récent. */
+  descriptions: GameDescriptionRow[]
   messages: ChatMessageRow[]
   me: RoomPlayerRow | null
   myRole: MyRole | null
@@ -49,6 +52,7 @@ export function useRoom(code: string) {
     players: [],
     game: null,
     statuses: [],
+    descriptions: [],
     messages: [],
     me: null,
     myRole: null,
@@ -103,9 +107,18 @@ export function useRoom(code: string) {
         const me = players.find((player) => player.user_id === userId) ?? null
 
         let statuses: GamePlayerStatusRow[] = []
+        let descriptions: GameDescriptionRow[] = []
         if (game) {
-          const { data } = await supabase.from('game_player_status').select('*').eq('game_id', game.id)
-          statuses = (data ?? []) as GamePlayerStatusRow[]
+          const [statusResult, descriptionResult] = await Promise.all([
+            supabase.from('game_player_status').select('*').eq('game_id', game.id),
+            supabase
+              .from('game_descriptions')
+              .select('*')
+              .eq('game_id', game.id)
+              .order('created_at', { ascending: true }),
+          ])
+          statuses = (statusResult.data ?? []) as GamePlayerStatusRow[]
+          descriptions = (descriptionResult.data ?? []) as GameDescriptionRow[]
         }
 
         // Le rôle personnel n'est (re)demandé qu'au changement de partie.
@@ -130,6 +143,7 @@ export function useRoom(code: string) {
           players,
           game,
           statuses,
+          descriptions,
           messages,
           me,
           myRole,
@@ -155,6 +169,7 @@ export function useRoom(code: string) {
   // Chargement initial + abonnements Realtime.
   React.useEffect(() => {
     let channel: RealtimeChannel | null = null
+    let descriptionChannel: RealtimeChannel | null = null
     let cancelled = false
 
     const setup = async () => {
@@ -182,13 +197,28 @@ export function useRoom(code: string) {
           void refresh({ silent: true })
         })
         .subscribe()
+
+      /*
+       * Descriptions écrites : canal séparé, volontairement.
+       * La table vient d'une migration additive ; si elle n'a pas encore été
+       * appliquée, l'abonnement échoue  ·  et il ne doit surtout pas emporter
+       * avec lui le canal principal (phases, joueurs, chat).
+       */
+      descriptionChannel = supabase
+        .channel(`room:${code}:descriptions`)
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'game_descriptions' }, () => {
+          void refresh({ silent: true })
+        })
+        .subscribe()
     }
 
     void setup()
 
     return () => {
       cancelled = true
-      if (channel) void getSupabaseBrowserClient().removeChannel(channel)
+      const supabase = getSupabaseBrowserClient()
+      if (channel) void supabase.removeChannel(channel)
+      if (descriptionChannel) void supabase.removeChannel(descriptionChannel)
     }
   }, [code, refresh])
 

@@ -4,7 +4,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js'
  * Client `service_role` : contourne la RLS.
  *
  * ⚠️ Serveur uniquement. Ce module ne doit jamais être importé depuis un
- * composant client — la clé n'est pas préfixée NEXT_PUBLIC_ et l'import
+ * composant client  ·  la clé n'est pas préfixée NEXT_PUBLIC_ et l'import
  * échouerait de toute façon côté navigateur.
  *
  * C'est ce client qui applique l'état du jeu calculé par le moteur : il est la

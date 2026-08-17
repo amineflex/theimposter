@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 /**
- * GET /api/health — diagnostic d'installation du mode en ligne.
+ * GET /api/health  ·  diagnostic d'installation du mode en ligne.
  *
  * Répond par une liste de vérifications lisibles : variables d'environnement
  * présentes, base joignable, migration appliquée, seed injecté, connexions
@@ -67,6 +67,19 @@ export async function GET() {
       detail: rooms.error?.message,
       hint: rooms.error
         ? 'Exécutez supabase/migrations/20250101000000_init.sql dans le SQL Editor.'
+        : undefined,
+    })
+
+    // Descriptions écrites : table ajoutée par la seconde migration.
+    const descriptions = await admin
+      .from('game_descriptions')
+      .select('id', { count: 'exact', head: true })
+    checks.push({
+      name: 'Descriptions écrites',
+      ok: !descriptions.error,
+      detail: descriptions.error?.message ?? `${descriptions.count ?? 0} description(s)`,
+      hint: descriptions.error
+        ? 'Exécutez supabase/migrations/20250102000000_descriptions.sql dans le SQL Editor.'
         : undefined,
     })
 

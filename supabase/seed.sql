@@ -1,7 +1,7 @@
 -- ===========================================================================
--- The Imposter — seed de la base de mots (FRANÇAIS)
+-- The Imposter  ·  seed de la base de mots (FRANÇAIS)
 --
--- FICHIER GÉNÉRÉ AUTOMATIQUEMENT — ne pas éditer à la main.
+-- FICHIER GÉNÉRÉ AUTOMATIQUEMENT  ·  ne pas éditer à la main.
 -- Source : src/data/impostor-words.ts, src/data/word-pairs.ts, src/data/packs.ts
 -- Régénérer avec : npm run seed:generate
 --

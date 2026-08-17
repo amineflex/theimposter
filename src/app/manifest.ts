@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next'
 /** Manifeste PWA : installation sur l'écran d'accueil, démarrage plein écran. */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'The Imposter — party game de déduction',
+    name: 'The Imposter  ·  party game de déduction',
     short_name: 'The Imposter',
     description:
       "Trouve l'intrus. Ou deviens-le. Party game social de déduction, en local sur un téléphone ou en ligne entre amis.",

@@ -1,7 +1,7 @@
 import { admin, handle, jsonError, jsonOk } from '@/lib/api/http'
 
 /**
- * GET /api/cron/cleanup — expire et purge les rooms abandonnées.
+ * GET /api/cron/cleanup  ·  expire et purge les rooms abandonnées.
  *
  * Protégé par `CRON_SECRET` (en-tête `Authorization: Bearer …`, format utilisé
  * par Vercel Cron). Voir la stratégie d'expiration dans la migration SQL et le

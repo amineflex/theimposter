@@ -81,7 +81,7 @@ export function GameResult({
       )}
       {mrWhiteGuess && (
         <p className="text-center text-sm font-bold text-ink-soft">
-          {mrWhiteGuess.name} a proposé « {mrWhiteGuess.guess} » —{' '}
+          {mrWhiteGuess.name} a proposé « {mrWhiteGuess.guess} »  · {' '}
           {mrWhiteGuess.correct ? 'correct' : 'incorrect'}.
         </p>
       )}
@@ -94,7 +94,7 @@ export function GameResult({
               {mode === 'impostor' ? t('result.secretWord') : t('result.civilianWord')}
             </dt>
             <dd className="font-display text-2xl font-extrabold uppercase leading-tight text-ink">
-              {civilianWord ?? '—'}
+              {civilianWord ?? ' · '}
             </dd>
           </div>
           {mode === 'undercover' && (
@@ -103,7 +103,7 @@ export function GameResult({
                 {t('result.undercoverWord')}
               </dt>
               <dd className="font-display text-2xl font-extrabold uppercase leading-tight text-ink">
-                {undercoverWord ?? '—'}
+                {undercoverWord ?? ' · '}
               </dd>
             </div>
           )}
@@ -113,7 +113,7 @@ export function GameResult({
                 {t('result.hintGiven')}
               </dt>
               <dd className="font-display text-2xl font-extrabold uppercase leading-tight text-ink">
-                {impostorHint ?? '—'}
+                {impostorHint ?? ' · '}
               </dd>
             </div>
           )}

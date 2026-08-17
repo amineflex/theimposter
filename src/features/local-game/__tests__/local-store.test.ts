@@ -36,7 +36,7 @@ function startGame(names = ['Adam', 'Sarah', 'Rayan', 'Yanis']) {
   return useLocalGame.getState()
 }
 
-describe('mode local — fenêtre de révélation', () => {
+describe('mode local  ·  fenêtre de révélation', () => {
   beforeEach(() => {
     useLocalGame.getState().reset()
   })
@@ -104,7 +104,7 @@ describe('mode local — fenêtre de révélation', () => {
   })
 })
 
-describe('mode local — fenêtre de vote', () => {
+describe('mode local  ·  fenêtre de vote', () => {
   beforeEach(() => {
     useLocalGame.getState().reset()
   })

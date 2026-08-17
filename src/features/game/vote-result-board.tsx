@@ -17,7 +17,7 @@ export interface VoteResultBoardProps {
  * Les lignes apparaissent en cascade pour créer un peu de suspense.
  */
 export function VoteResultBoard({ lastVote, players }: VoteResultBoardProps) {
-  const nameOf = (id: string) => players.find((player) => player.id === id)?.name ?? '—'
+  const nameOf = (id: string) => players.find((player) => player.id === id)?.name ?? ' · '
   const tally = Object.entries(lastVote.tally).sort((a, b) => b[1] - a[1])
 
   return (

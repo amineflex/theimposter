@@ -332,7 +332,7 @@ function TimerField({
   )
 }
 
-/** Ligne « libellé — − n + » compacte, pour les réglages secondaires. */
+/** Ligne « libellé  ·  − n + » compacte, pour les réglages secondaires. */
 function RowStepper({
   label,
   value,

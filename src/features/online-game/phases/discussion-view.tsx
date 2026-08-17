@@ -6,7 +6,12 @@ import { PartyButton } from '@/components/party/party-button'
 import { GameBanner } from '@/components/party/game-banner'
 import { Countdown } from '@/components/party/countdown'
 import { DiscussionBoard } from '@/features/game/discussion-board'
-import { ChatPanel } from '../chat-panel'
+import { PartyCard } from '@/components/party/party-card'
+import {
+  DescriptionHistory,
+  DescriptionInput,
+  useDescriptionEntries,
+} from '../description-board'
 import { HostControls } from './host-controls'
 import { MyWordReminder } from './my-word-reminder'
 import { api, describeError } from '@/lib/api/client'
@@ -23,6 +28,7 @@ export function DiscussionView({ room }: { room: RoomViewModel }) {
   const remaining = useCountdown(game?.phase_ends_at, game?.is_paused)
 
   const players = playersInGame(buildPlayerViews(room.players, room.statuses, room.me), room.statuses)
+  const entries = useDescriptionEntries(room)
   const currentSpeakerId =
     game && game.current_speaker_index >= 0
       ? (game.speaking_order[game.current_speaker_index] ?? null)
@@ -50,6 +56,20 @@ export function DiscussionView({ room }: { room: RoomViewModel }) {
 
   const totalDuration = game.settings.speakDuration === 0 ? null : game.settings.speakDuration
   const speaker = players.find((player) => player.id === currentSpeakerId)
+
+  const freeDiscussion = game.settings.descriptionRounds === 'free'
+  const me = room.me
+  // Une seule description par joueur et par passe : côté serveur comme ici.
+  const alreadyWritten =
+    me != null &&
+    room.descriptions.some(
+      (entry) =>
+        entry.room_player_id === me.id &&
+        entry.round === game.round &&
+        entry.pass === game.description_pass,
+    )
+  const amAlive = players.find((player) => player.id === me?.id)?.isAlive ?? false
+  const canWrite = amAlive && !game.is_paused && !alreadyWritten && (freeDiscussion || isMyTurn)
 
   return (
     <div className="space-y-5">
@@ -88,13 +108,41 @@ export function DiscussionView({ room }: { room: RoomViewModel }) {
         totalPasses={game.settings.descriptionRounds}
       />
 
-      {isMyTurn && (
-        <PartyButton variant="yellow" size="xl" block loading={submitting} onClick={done}>
-          {t('discussion.done')}
-        </PartyButton>
+      {/* Saisie écrite : c'est ici que l'on donne son indice, pas dans le chat. */}
+      {canWrite ? (
+        <PartyCard tone="cream" padding="md" tilt="left">
+          <DescriptionInput room={room} />
+          {isMyTurn && !freeDiscussion && (
+            <PartyButton
+              variant="ghost"
+              size="sm"
+              block
+              className="mt-3"
+              loading={submitting}
+              onClick={done}
+            >
+              {t('discussion.skip')}
+            </PartyButton>
+          )}
+        </PartyCard>
+      ) : (
+        amAlive && (
+          <PartyCard tone="paper" padding="md" className="text-center">
+            <p className="text-sm font-bold text-ink-soft">
+              {alreadyWritten
+                ? freeDiscussion
+                  ? t('describe.freeMode')
+                  : t('describe.sent')
+                : speaker
+                  ? t('describe.waiting', { name: speaker.name })
+                  : t('discussion.instruction')}
+            </p>
+          </PartyCard>
+        )
       )}
 
-      <ChatPanel room={room} />
+      <DescriptionHistory entries={entries} currentRound={game.round} mode="current" />
+
       <HostControls room={room} />
     </div>
   )

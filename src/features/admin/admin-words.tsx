@@ -285,7 +285,7 @@ export function AdminWords() {
                   </p>
                   <p className="truncate text-xs text-muted-foreground">
                     {kind === 'impostor' ? `Indice : ${item.hint} · ` : ''}
-                    {item.categories?.name ?? '—'} · {t(`difficulty.${item.difficulty}`)} ·{' '}
+                    {item.categories?.name ?? ' · '} · {t(`difficulty.${item.difficulty}`)} ·{' '}
                     {item.pack_links.map((link) => link.packs?.name).filter(Boolean).join(', ')}
                   </p>
                 </div>

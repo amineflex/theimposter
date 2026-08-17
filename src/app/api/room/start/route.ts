@@ -23,7 +23,7 @@ const startSchema = z.object({
   order: z.enum(['random', 'as-is']).optional(),
 })
 
-/** POST /api/room/start — l'hôte lance la partie. */
+/** POST /api/room/start  ·  l'hôte lance la partie. */
 export async function POST(request: Request) {
   return handle(async () => {
     const userId = await requireUserId()

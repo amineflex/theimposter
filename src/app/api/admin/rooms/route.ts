@@ -6,7 +6,7 @@ const actionSchema = z.object({
   action: z.enum(['cancel', 'expire']),
 })
 
-/** GET /api/admin/rooms — rooms récentes avec leur activité. */
+/** GET /api/admin/rooms  ·  rooms récentes avec leur activité. */
 export async function GET() {
   return handle(async () => {
     await requireAdminUser()
@@ -28,7 +28,7 @@ export async function GET() {
   })
 }
 
-/** POST /api/admin/rooms — annule ou expire une room. */
+/** POST /api/admin/rooms  ·  annule ou expire une room. */
 export async function POST(request: Request) {
   return handle(async () => {
     await requireAdminUser()

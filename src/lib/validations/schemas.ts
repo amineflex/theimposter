@@ -153,6 +153,16 @@ export const voteSchema = z.object({
   targetId: z.string().uuid(),
 })
 
+/** Description écrite : courte, une phrase suffit. */
+export const describeSchema = z.object({
+  gameId: z.string().uuid(),
+  body: z
+    .string()
+    .trim()
+    .min(1, 'Écrivez votre description.')
+    .max(120, 'Description trop longue (120 caractères max).'),
+})
+
 export const mrWhiteGuessSchema = z.object({
   gameId: z.string().uuid(),
   guess: z.string().trim().min(1, 'Entrez un mot.').max(60),

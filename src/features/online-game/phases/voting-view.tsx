@@ -9,6 +9,7 @@ import { GameBanner } from '@/components/party/game-banner'
 import { Countdown } from '@/components/party/countdown'
 import { VoteCard } from '@/components/game/vote-card'
 import { MyWordReminder } from './my-word-reminder'
+import { DescriptionHistory, useDescriptionEntries } from '../description-board'
 import { HostControls } from './host-controls'
 import { api, describeError } from '@/lib/api/client'
 import { useCountdown } from '@/hooks/use-countdown'
@@ -28,6 +29,7 @@ export function VotingView({ room }: { room: RoomViewModel }) {
   const remaining = useCountdown(game?.phase_ends_at, game?.is_paused)
 
   const players = playersInGame(buildPlayerViews(room.players, room.statuses, room.me), room.statuses)
+  const entries = useDescriptionEntries(room)
   const alive = players.filter((player) => player.isAlive)
   const votedCount = alive.filter((player) => player.hasVoted).length
   const me = players.find((player) => player.isYou)
@@ -74,6 +76,9 @@ export function VotingView({ room }: { room: RoomViewModel }) {
       {runoffCandidates && <StickerBadge tone="orange" tilt>{t('vote.runoff')}</StickerBadge>}
 
       <MyWordReminder room={room} />
+
+      {/* Historique complet : on relit ce que chacun a écrit avant de voter. */}
+      <DescriptionHistory entries={entries} currentRound={game.round} mode="all" />
 
       <p
         className="text-center font-display text-lg font-extrabold uppercase text-ink"

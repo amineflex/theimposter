@@ -293,6 +293,19 @@ export const fr = {
   'lobby.waitingPlayers': 'On attend du monde…',
   'lobby.full': 'Partie complète !',
   'reveal.dontLook': 'Personne ne regarde ?',
+
+  // --- Descriptions écrites (mode en ligne) ---------------------------------
+  'describe.label': 'Ta description',
+  'describe.placeholder': 'Décris ton mot en une phrase…',
+  'describe.hint': "n'écris pas ton mot !",
+  'describe.send': 'Envoyer ma description',
+  'describe.history': 'Ce qui a été dit',
+  'describe.thisRound': 'Ce tour',
+  'describe.empty': 'Aucune description pour le moment.',
+  'describe.waiting': 'En attente de {name}…',
+  'describe.sent': 'Description envoyée !',
+  'describe.yourTurn': 'À toi d\'écrire !',
+  'describe.freeMode': 'Tout le monde écrit, dans l\'ordre de son choix.',
 } as const
 
 export type TranslationKey = keyof typeof fr

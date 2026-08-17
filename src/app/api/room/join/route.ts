@@ -14,7 +14,7 @@ import { pickAvatarKey } from '@/lib/avatars'
 import { joinRoomSchema } from '@/lib/validations/schemas'
 import type { RoomPlayerRow } from '@/types/db'
 
-/** POST /api/room/join — rejoint une room via son code. */
+/** POST /api/room/join  ·  rejoint une room via son code. */
 export async function POST(request: Request) {
   return handle(async () => {
     const userId = await requireUserId()

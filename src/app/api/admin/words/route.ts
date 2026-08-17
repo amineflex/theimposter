@@ -21,7 +21,7 @@ const deleteSchema = z.object({
   id: z.string().uuid(),
 })
 
-/** GET /api/admin/words — liste paginée avec filtres. */
+/** GET /api/admin/words  ·  liste paginée avec filtres. */
 export async function GET(request: Request) {
   return handle(async () => {
     await requireAdminUser()
@@ -69,7 +69,7 @@ export async function GET(request: Request) {
   })
 }
 
-/** POST /api/admin/words — crée une entrée. */
+/** POST /api/admin/words  ·  crée une entrée. */
 export async function POST(request: Request) {
   return handle(async () => {
     await requireAdminUser()
@@ -121,7 +121,7 @@ export async function POST(request: Request) {
   })
 }
 
-/** PATCH /api/admin/words — modifie une entrée (y compris activer/désactiver). */
+/** PATCH /api/admin/words  ·  modifie une entrée (y compris activer/désactiver). */
 export async function PATCH(request: Request) {
   return handle(async () => {
     await requireAdminUser()
@@ -164,7 +164,7 @@ export async function PATCH(request: Request) {
   })
 }
 
-/** DELETE /api/admin/words — supprime une entrée. */
+/** DELETE /api/admin/words  ·  supprime une entrée. */
 export async function DELETE(request: Request) {
   return handle(async () => {
     await requireAdminUser()

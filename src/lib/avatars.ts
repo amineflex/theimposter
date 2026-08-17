@@ -1,5 +1,5 @@
 /**
- * Avatars de joueurs : 16 petits blobs originaux, très simples — une tête
+ * Avatars de joueurs : 16 petits blobs originaux, très simples  ·  une tête
  * ronde, deux yeux, une bouche, et un accessoire distinctif.
  *
  * ⚠️ Les `key` sont stockées en base (`room_players.avatar_key`) : elles ne

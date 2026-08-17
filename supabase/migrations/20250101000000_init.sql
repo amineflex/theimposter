@@ -1,5 +1,5 @@
 -- ===========================================================================
--- The Imposter — schéma initial
+-- The Imposter  ·  schéma initial
 --
 -- Principes de sécurité :
 --  * Le client navigateur n'écrit JAMAIS dans les tables de jeu. Toutes les

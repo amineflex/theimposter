@@ -9,7 +9,7 @@ import {
 } from '@/lib/api/http'
 import { reportSchema } from '@/lib/validations/schemas'
 
-/** POST /api/report — signale un comportement problématique. */
+/** POST /api/report  ·  signale un comportement problématique. */
 export async function POST(request: Request) {
   return handle(async () => {
     const userId = await requireUserId()

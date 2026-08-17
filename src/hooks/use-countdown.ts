@@ -36,7 +36,7 @@ function remainingFrom(deadline: number | null): number | null {
  * Décompte local (mode hors ligne) : compte à rebours depuis une durée.
  *
  * L'échéance est fixée au démarrage du minuteur et le temps restant n'est mis à
- * jour que depuis le callback de l'intervalle — jamais dans le corps d'un effet,
+ * jour que depuis le callback de l'intervalle  ·  jamais dans le corps d'un effet,
  * pour éviter les rendus en cascade.
  */
 export function useLocalCountdown(

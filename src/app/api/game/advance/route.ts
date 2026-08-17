@@ -13,7 +13,7 @@ import { advancePhase } from '@/lib/game/service'
 import { advancePhaseSchema } from '@/lib/validations/schemas'
 
 /**
- * POST /api/game/advance — fait avancer la machine d'état.
+ * POST /api/game/advance  ·  fait avancer la machine d'état.
  *
  * L'autorisation est calculée côté serveur : minuteur écoulé, phase
  * d'affichage automatique, orateur courant qui a terminé, ou hôte qui force.

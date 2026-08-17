@@ -110,7 +110,7 @@ export function LocalGameScreen() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Étape 1 — joueurs et réglages                                              */
+/* Étape 1  ·  joueurs et réglages                                              */
 /* -------------------------------------------------------------------------- */
 
 function SetupStep({ onStart }: { onStart: () => void }) {
@@ -233,7 +233,7 @@ function SetupStep({ onStart }: { onStart: () => void }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Étape 2 — passage du téléphone et révélation                               */
+/* Étape 2  ·  passage du téléphone et révélation                               */
 /* -------------------------------------------------------------------------- */
 
 function HandoffStep() {
@@ -319,7 +319,7 @@ function RevealStep() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Étape 3 — descriptions                                                      */
+/* Étape 3  ·  descriptions                                                      */
 /* -------------------------------------------------------------------------- */
 
 function LocalDiscussion() {
@@ -385,7 +385,7 @@ function LocalDiscussion() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Étape 4 — vote hot-seat                                                     */
+/* Étape 4  ·  vote hot-seat                                                     */
 /* -------------------------------------------------------------------------- */
 
 function VoteHandoffStep() {

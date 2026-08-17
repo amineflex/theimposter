@@ -355,7 +355,7 @@ describe('votes', () => {
   })
 })
 
-describe('conditions de victoire — mode undercover', () => {
+describe('conditions de victoire  ·  mode undercover', () => {
   it('les civils gagnent quand tous les intrus sont éliminés', () => {
     let state = advanceSpeaker(
       beginDiscussion(
@@ -393,7 +393,7 @@ describe('conditions de victoire — mode undercover', () => {
   })
 })
 
-describe('conditions de victoire — mode imposteur', () => {
+describe('conditions de victoire  ·  mode imposteur', () => {
   it('les joueurs gagnent quand l\'imposteur est éliminé', () => {
     let state = advanceSpeaker(
       beginDiscussion(

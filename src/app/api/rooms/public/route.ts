@@ -2,7 +2,7 @@ import { admin, handle, jsonOk } from '@/lib/api/http'
 import type { PublicRoomRow } from '@/types/db'
 
 /**
- * GET /api/rooms/public — liste des parties publiques rejoignables.
+ * GET /api/rooms/public  ·  liste des parties publiques rejoignables.
  *
  * S'appuie sur la vue `public_rooms`, qui n'expose que le code, le mode, le
  * nombre de joueurs, les places restantes et la difficulté. Aucun mot ni rôle.

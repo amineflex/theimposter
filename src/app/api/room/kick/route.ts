@@ -13,7 +13,7 @@ import { removePlayerFromActiveGame } from '@/lib/game/service'
 import { kickPlayerSchema } from '@/lib/validations/schemas'
 import type { RoomPlayerRow } from '@/types/db'
 
-/** POST /api/room/kick — l'hôte exclut un joueur. */
+/** POST /api/room/kick  ·  l'hôte exclut un joueur. */
 export async function POST(request: Request) {
   return handle(async () => {
     const userId = await requireUserId()

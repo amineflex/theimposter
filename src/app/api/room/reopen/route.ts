@@ -11,7 +11,7 @@ import {
 import { roomActionSchema } from '@/lib/validations/schemas'
 
 /**
- * POST /api/room/reopen — ramène une room terminée dans le salon.
+ * POST /api/room/reopen  ·  ramène une room terminée dans le salon.
  *
  * Permet à l'hôte de modifier les paramètres entre deux parties (les réglages
  * ne sont modifiables qu'en statut `lobby`), puis de relancer.

@@ -187,7 +187,7 @@ export async function saveGame(
  * Écrit le signal public de changement de phase.
  *
  * `games` n'étant pas lisible par le client pendant la partie, c'est cette
- * table — sans aucune donnée sensible — qui déclenche la resynchronisation des
+ * table  ·  sans aucune donnée sensible  ·  qui déclenche la resynchronisation des
  * clients via Realtime.
  */
 async function publishPhaseEvent(

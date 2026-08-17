@@ -28,7 +28,7 @@ export function RoomCode({ code, className }: RoomCodeProps) {
 
   /**
    * L'URL de partage dépend du navigateur : on la calcule au moment de l'action
-   * (copie, partage, QR) plutôt que dans un effet — pas d'état inutile, et aucun
+   * (copie, partage, QR) plutôt que dans un effet  ·  pas d'état inutile, et aucun
    * risque de divergence entre le rendu serveur et le client.
    */
   const buildJoinUrl = () => `${window.location.origin}/join/${code}`

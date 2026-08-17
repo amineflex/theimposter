@@ -14,7 +14,7 @@ import { chatMessageSchema } from '@/lib/validations/schemas'
 import { ALLOWED_REACTIONS } from '@/lib/chat-reactions'
 
 
-/** POST /api/chat/send — envoie un message ou une réaction. */
+/** POST /api/chat/send  ·  envoie un message ou une réaction. */
 export async function POST(request: Request) {
   return handle(async () => {
     const userId = await requireUserId()

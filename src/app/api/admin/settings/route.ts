@@ -1,7 +1,7 @@
 import { admin, handle, jsonOk, parseBody, requireAdminUser } from '@/lib/api/http'
 import { adminSettingSchema } from '@/lib/validations/schemas'
 
-/** POST /api/admin/settings — met à jour un réglage applicatif. */
+/** POST /api/admin/settings  ·  met à jour un réglage applicatif. */
 export async function POST(request: Request) {
   return handle(async () => {
     await requireAdminUser()

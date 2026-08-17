@@ -10,7 +10,7 @@ import { advanceIfExpired } from '@/lib/game/service'
 import { gameActionSchema } from '@/lib/validations/schemas'
 
 /**
- * POST /api/game/tick — applique un minuteur écoulé.
+ * POST /api/game/tick  ·  applique un minuteur écoulé.
  *
  * Appelé par les clients quand ils constatent que `phase_ends_at` est dépassé.
  * Le serveur revérifie l'échéance : un client qui appelle trop tôt n'obtient

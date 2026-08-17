@@ -8,7 +8,7 @@ import {
 } from '@/lib/api/http'
 import { roomActionSchema } from '@/lib/validations/schemas'
 
-/** POST /api/room/cancel — l'hôte annule la partie et ferme la room. */
+/** POST /api/room/cancel  ·  l'hôte annule la partie et ferme la room. */
 export async function POST(request: Request) {
   return handle(async () => {
     const userId = await requireUserId()

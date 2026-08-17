@@ -27,7 +27,7 @@ export function AdminOverview({ stats }: { stats: AdminStats | null }) {
     { label: t('admin.stats.avgPlayers'), value: String(stats.avg_player_count) },
     {
       label: t('admin.stats.topMode'),
-      value: stats.most_played_mode ? t(`mode.${stats.most_played_mode}`) : '—',
+      value: stats.most_played_mode ? t(`mode.${stats.most_played_mode}`) : ' · ',
     },
     { label: t('admin.stats.words'), value: String(stats.words_total) },
     { label: t('admin.stats.openReports'), value: String(stats.open_reports) },

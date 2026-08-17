@@ -11,7 +11,7 @@ import { mrWhiteGuess } from '@/lib/game/service'
 import { mrWhiteGuessSchema } from '@/lib/validations/schemas'
 
 /**
- * POST /api/game/mr-white — dernière chance de Mr. White.
+ * POST /api/game/mr-white  ·  dernière chance de Mr. White.
  *
  * La comparaison est faite côté serveur (normalisation casse/accents/ponctuation
  * + liste de réponses acceptées) : le mot des civils n'est jamais envoyé au

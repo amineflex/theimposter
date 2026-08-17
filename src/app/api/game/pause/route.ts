@@ -12,7 +12,7 @@ import { phaseDuration } from '@/lib/game-engine/engine'
 import { pauseSchema } from '@/lib/validations/schemas'
 
 /**
- * POST /api/game/pause — l'hôte met la partie en pause ou la reprend.
+ * POST /api/game/pause  ·  l'hôte met la partie en pause ou la reprend.
  * À la reprise, le minuteur de la phase courante repart pour sa durée pleine.
  */
 export async function POST(request: Request) {

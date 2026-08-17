@@ -28,10 +28,10 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'The Imposter — party game de déduction',
+    default: 'The Imposter  ·  party game de déduction',
     template: '%s · The Imposter',
   },
-  description: `${t('app.description')} — by amineflex`,
+  description: `${t('app.description')}  ·  by amineflex`,
   applicationName: 'The Imposter',
   authors: [{ name: 'amineflex', url: 'https://amineflex.is-a.dev' }],
   creator: 'amineflex',
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
     url: siteUrl,
     siteName: 'The Imposter',
-    title: 'The Imposter — party game de déduction',
+    title: 'The Imposter  ·  party game de déduction',
     description: t('app.description'),
     images: [{ url: '/icons/og.png', width: 1200, height: 630, alt: 'The Imposter' }],
   },

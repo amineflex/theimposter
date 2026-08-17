@@ -13,7 +13,7 @@ import { roomActionSchema } from '@/lib/validations/schemas'
 import type { RoomPlayerRow } from '@/types/db'
 
 /**
- * POST /api/room/leave — quitte définitivement une room.
+ * POST /api/room/leave  ·  quitte définitivement une room.
  *
  * Si l'hôte part, un nouvel hôte est désigné automatiquement parmi les joueurs
  * présents : la partie ne meurt pas parce que le créateur ferme son navigateur.

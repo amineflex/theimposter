@@ -81,7 +81,7 @@ function playRoundAgainst(state: GameState, targetId: string, rng = seededRng())
   return next
 }
 
-describe('partie complète — mode undercover à 8 joueurs', () => {
+describe('partie complète  ·  mode undercover à 8 joueurs', () => {
   it('se termine par la victoire des civils quand tous les intrus sont votés dehors', () => {
     let state = reachDiscussion(startGame(8))
     const intruders = state.players.filter((p) => p.role !== 'civilian').map((p) => p.id)

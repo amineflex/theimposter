@@ -2,7 +2,7 @@
   "name": "the-imposter",
   "version": "1.0.0",
   "private": true,
-  "description": "The Imposter — party game social de déduction (Imposteur / Undercover)",
+  "description": "The Imposter  ·  party game social de déduction (Imposteur / Undercover)",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

@@ -17,7 +17,7 @@ import {
 } from '@/lib/game-engine/engine'
 import { validateSettings } from '@/lib/game-engine/roles'
 import type { GameSettings, GameState } from '@/lib/game-engine/types'
-import { ApiError, trackEvent } from '@/lib/api/http'
+import { ApiError, touchRoom, trackEvent } from '@/lib/api/http'
 import {
   ConcurrentUpdateError,
   isPhaseExpired,
@@ -25,6 +25,7 @@ import {
   saveGame,
   syncPlayerStatus,
 } from './persistence'
+import { containsSecret } from './description-guard'
 import { recentWordIdsForRoom, resolveWordSet } from './word-repository'
 import type { GameRow, RoomPlayerRow, RoomRow } from '@/types/db'
 
@@ -305,6 +306,106 @@ function nextState(state: GameState): GameState | null {
   }
 }
 
+/**
+ * Enregistre la description écrite d'un joueur, puis passe la parole.
+ *
+ * Règles appliquées côté serveur :
+ *  - la phase doit être la discussion, et la partie ne doit pas être en pause ;
+ *  - en tours de description, seul l'orateur courant peut écrire ; en discussion
+ *   libre, tout joueur vivant peut écrire une fois par passe ;
+ *  - un joueur ne peut pas écrire SON PROPRE MOT (protection contre la fuite
+ *    involontaire) ;
+ *  - l'index unique en base empêche le double envoi.
+ */
+export async function submitDescription(
+  admin: SupabaseClient,
+  gameId: string,
+  roomPlayerId: string,
+  body: string,
+): Promise<GameState> {
+  const { state, row } = await loadGame(admin, gameId)
+
+  if (state.phase !== 'discussion') {
+    throw new ApiError("Ce n'est pas la phase de description.", 409, 'phase')
+  }
+  if (row.is_paused) throw new ApiError('La partie est en pause.', 409, 'paused')
+
+  const author = state.players.find((player) => player.id === roomPlayerId)
+  if (!author?.isAlive) {
+    throw new ApiError('Les joueurs éliminés ne décrivent plus.', 403, 'eliminated')
+  }
+
+  const freeDiscussion = state.settings.descriptionRounds === 'free'
+  if (!freeDiscussion && state.speakingOrder[state.currentSpeakerIndex] !== roomPlayerId) {
+    throw new ApiError("Ce n'est pas votre tour de parole.", 409, 'not_your_turn')
+  }
+
+  // Le joueur ne doit pas écrire son propre mot (ni l'indice de l'imposteur).
+  const secret = author.word ?? author.hint
+  if (secret && containsSecret(body, secret)) {
+    throw new ApiError('Vous ne pouvez pas écrire votre propre mot !', 422, 'word_leak')
+  }
+
+  const { error } = await admin.from('game_descriptions').insert({
+    game_id: gameId,
+    room_player_id: roomPlayerId,
+    round: state.round,
+    pass: state.descriptionPass,
+    body,
+  })
+  if (error) {
+    if (error.code === '23505') {
+      throw new ApiError('Vous avez déjà décrit votre mot pour ce tour.', 409, 'already_described')
+    }
+    throw error
+  }
+
+  await touchRoom(row.room_id)
+
+  /*
+   * Tours de description : la parole passe au joueur suivant.
+   * Discussion libre : on n'avance que lorsque tout le monde a écrit.
+   */
+  if (!freeDiscussion) {
+    const next = advanceSpeaker(state)
+    try {
+      await saveGame(admin, gameId, row.version, next)
+    } catch (saveError) {
+      // Un minuteur a déjà fait avancer la partie : la description est conservée.
+      if (!(saveError instanceof ConcurrentUpdateError)) throw saveError
+    }
+    return next
+  }
+
+  const alive = state.players.filter((player) => player.isAlive).map((player) => player.id)
+  const { data: written } = await admin
+    .from('game_descriptions')
+    .select('room_player_id')
+    .eq('game_id', gameId)
+    .eq('round', state.round)
+    .eq('pass', state.descriptionPass)
+  const authors = new Set(
+    ((written ?? []) as { room_player_id: string }[]).map((entry) => entry.room_player_id),
+  )
+  if (alive.every((id) => authors.has(id))) {
+    const next = advanceSpeaker(state)
+    try {
+      await saveGame(admin, gameId, row.version, next)
+    } catch (saveError) {
+      if (!(saveError instanceof ConcurrentUpdateError)) throw saveError
+    }
+    return next
+  }
+
+  return state
+}
+
+/**
+ * Le mot secret apparaît-il dans la description ?
+ * Comparaison normalisée (casse, accents, ponctuation) sur les mots entiers,
+ * pour ne pas rejeter « poissonnerie » quand le mot est « poisson »… tout en
+ * bloquant « c'est un Poisson ! ».
+ */
 /** Devinette finale de Mr. White. */
 export async function mrWhiteGuess(
   admin: SupabaseClient,

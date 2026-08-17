@@ -3,7 +3,7 @@
 @import 'tw-animate-css';
 
 /* ===========================================================================
- * DESIGN TOKENS — The Imposter
+ * DESIGN TOKENS  ·  The Imposter
  *
  * Direction : party game de console. Fond crème, aplats de couleurs franches,
  * contours d'encre épais, ombres DURES (jamais floues), typographie ronde.
@@ -24,7 +24,7 @@
   --color-cream: hsl(43 100% 95%); /* #FFF8E7 */
   --color-cream-deep: hsl(42 78% 89%); /* fond alternatif, un ton plus soutenu */
   --color-paper: hsl(48 100% 99%); /* surfaces de cartes, presque blanc chaud */
-  --color-ink: hsl(0 0% 13%); /* #202020 — contours et texte */
+  --color-ink: hsl(0 0% 13%); /* #202020  ·  contours et texte */
   --color-ink-soft: hsl(0 0% 34%); /* texte secondaire */
 
   /* --- Palette d'accent (aplats uniquement) ----------------------------- */
@@ -286,7 +286,7 @@
   }
 
   /*
-   * Bouton physique : au doigt, il descend de 4px et son ombre disparaît —
+   * Bouton physique : au doigt, il descend de 4px et son ombre disparaît  · 
    * exactement la sensation d'une touche de jouet.
    */
   .toy-press {
@@ -329,7 +329,7 @@
 
   /*
    * Variante encre : pour un titre écrit directement en noir sur le fond crème,
-   * le contour d'encre n'aurait aucun sens — on garde juste la masse.
+   * le contour d'encre n'aurait aucun sens  ·  on garde juste la masse.
    */
   .toy-title-ink {
     font-family: var(--font-display);

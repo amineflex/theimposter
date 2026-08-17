@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 /**
  * Modale de jeu : carte crème à contour d'encre qui surgit du bas sur mobile et
  * au centre sur desktop. S'appuie sur Radix Dialog (piège à focus, fermeture au
- * clavier, aria) avec une apparence entièrement custom — aucun flou, aucun
+ * clavier, aria) avec une apparence entièrement custom  ·  aucun flou, aucun
  * gradient, voile d'encre opaque.
  */
 export function PopModal({

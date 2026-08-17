@@ -51,8 +51,30 @@ export async function handle(fn: () => Promise<NextResponse>): Promise<NextRespo
     if (error instanceof GameNotFoundError) return jsonError(error.message, 404, 'not_found')
 
     console.error('[api] erreur inattendue', error)
+
+    /*
+     * Table absente : la base n'a pas toutes les migrations. Le message reste
+     * sans détail technique côté joueur, mais nomme la cause pour l'exploitant
+     * plutôt que de laisser un « réessayez » qui ne se résoudra jamais seul.
+     */
+    if (isMissingRelation(error)) {
+      return jsonError(
+        "Cette fonctionnalité n'est pas encore installée sur le serveur. Contactez l'hôte du jeu.",
+        503,
+        'missing_migration',
+      )
+    }
+
     return jsonError('Une erreur est survenue. Réessayez dans un instant.', 500, 'internal')
   }
+}
+
+/** Erreur PostgREST/Postgres « relation inexistante » (migration manquante). */
+function isMissingRelation(error: unknown): boolean {
+  if (typeof error !== 'object' || error === null) return false
+  const code = (error as { code?: unknown }).code
+  // 42P01 : undefined_table côté Postgres. PGRST205 : table inconnue du cache PostgREST.
+  return code === '42P01' || code === 'PGRST205'
 }
 
 export async function parseBody<T>(request: Request, schema: { parse: (input: unknown) => T }): Promise<T> {
@@ -123,6 +145,7 @@ export const RATE_LIMITS = {
   chat: { action: 'chat', limit: 20, windowSeconds: 60 },
   reaction: { action: 'reaction', limit: 30, windowSeconds: 60 },
   vote: { action: 'vote', limit: 60, windowSeconds: 300 },
+  describe: { action: 'describe', limit: 60, windowSeconds: 300 },
   advance: { action: 'advance', limit: 240, windowSeconds: 300 },
   report: { action: 'report', limit: 5, windowSeconds: 3600 },
   lookup: { action: 'lookup', limit: 60, windowSeconds: 300 },

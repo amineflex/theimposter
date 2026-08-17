@@ -19,7 +19,7 @@ const rematchSchema = z.object({
 })
 
 /**
- * POST /api/room/rematch — relance une partie avec les joueurs présents.
+ * POST /api/room/rematch  ·  relance une partie avec les joueurs présents.
  *
  * Les mots déjà tirés dans cette room sont évités, et l'attribution des rôles
  * tient compte de `recent_special_count` pour éviter qu'un même joueur enchaîne

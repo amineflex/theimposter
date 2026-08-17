@@ -148,6 +148,17 @@ export interface VoteRow {
   created_at: string
 }
 
+/** Description écrite par un joueur à son tour de parole. */
+export interface GameDescriptionRow {
+  id: string
+  game_id: string
+  room_player_id: string
+  round: number
+  pass: number
+  body: string
+  created_at: string
+}
+
 export interface ChatMessageRow {
   id: string
   room_id: string

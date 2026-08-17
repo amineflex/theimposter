@@ -10,7 +10,7 @@ import {
 import { markRoleRevealed } from '@/lib/game/service'
 import { gameActionSchema } from '@/lib/validations/schemas'
 
-/** POST /api/game/reveal — le joueur confirme avoir vu sa carte de rôle. */
+/** POST /api/game/reveal  ·  le joueur confirme avoir vu sa carte de rôle. */
 export async function POST(request: Request) {
   return handle(async () => {
     const userId = await requireUserId()
