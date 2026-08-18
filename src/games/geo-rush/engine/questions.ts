@@ -43,11 +43,15 @@ function makeQuestion(
   }
 }
 
-export function generateQuestions(config: GeoConfig, seed: string): GeoQuestion[] {
+export function generateQuestions(
+  config: GeoConfig,
+  seed: string,
+  countries: readonly GeoCountry[] = COUNTRIES,
+): GeoQuestion[] {
   const random = seededRandom(seed)
-  let source = countriesFor(config.difficulty, config.region)
+  let source = countriesFor(config.difficulty, config.region, countries)
   // Certaines petites régions ont trop peu de pays faciles pour fabriquer un QCM.
-  if (source.length < 4) source = COUNTRIES.filter((country) => config.region === 'world' || country.region === config.region)
+  if (source.length < 4) source = countries.filter((country) => config.region === 'world' || country.region === config.region)
   if (source.length < 4) throw new Error('Pas assez de pays pour cette sélection.')
 
   const countryPool = shuffle(source, random)

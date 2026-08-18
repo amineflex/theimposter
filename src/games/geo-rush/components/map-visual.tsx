@@ -10,17 +10,28 @@ const collection = feature(topology, topology.objects.countries as GeometryColle
 const features = collection.features
 const worldProjection = geoEquirectangular().fitExtent([[8, 8], [792, 392]], { type: 'Sphere' })
 const drawWorld = geoPath(worldProjection)
+const WORLD_VIEW_BOX = '0 0 800 400'
 
-function WorldMapView({ geometryIndex }: { geometryIndex: number }) {
+function focusedViewBox(selected: Feature | undefined): string {
+  if (!selected) return WORLD_VIEW_BOX
+  const [[x0, y0], [x1, y1]] = drawWorld.bounds(selected)
+  const width = Math.min(800, Math.max(140, (x1 - x0) * 2, (y1 - y0) * 4))
+  const height = width / 2
+  const x = Math.min(800 - width, Math.max(0, (x0 + x1 - width) / 2))
+  const y = Math.min(400 - height, Math.max(0, (y0 + y1 - height) / 2))
+  return [x, y, width, height].map((value) => Number(value.toFixed(3))).join(' ')
+}
+
+function WorldMapView({ geometryIndex, focused = false }: { geometryIndex: number; focused?: boolean }) {
   const selected = features[geometryIndex]
   const rawMarker = selected ? worldProjection(geoCentroid(selected as Feature)) : null
   // Arrondi explicite : évite les écarts flottants infimes entre SSR et navigateur.
   const marker = rawMarker?.map((coordinate) => Number(coordinate.toFixed(3))) as [number, number] | undefined
   return (
-    <svg viewBox="0 0 800 400" className="h-auto w-full" role="img" aria-label="Carte du monde avec un pays coloré">
+    <svg viewBox={focused ? focusedViewBox(selected) : WORLD_VIEW_BOX} className="h-auto w-full" role="img" aria-label={focused ? 'Carte agrandie avec un pays coloré' : 'Carte du monde avec un pays coloré'}>
       <rect width="800" height="400" rx="24" fill="var(--color-blue)" opacity=".18" />
       {features.map((item, index) => <path key={`${item.id}-${index}`} d={drawWorld(item as Feature) ?? ''} fill={index === geometryIndex ? 'var(--color-yellow)' : 'var(--color-paper)'} stroke="var(--color-ink)" strokeWidth={index === geometryIndex ? 2.4 : .7} vectorEffect="non-scaling-stroke" />)}
-      {marker && <g transform={`translate(${marker[0]} ${marker[1]})`}><circle r="10" fill="var(--color-yellow)" stroke="var(--color-ink)" strokeWidth="3" vectorEffect="non-scaling-stroke" /><circle r="3" fill="var(--color-red)" /></g>}
+      {marker && !focused && <g transform={`translate(${marker[0]} ${marker[1]})`}><circle r="10" fill="var(--color-yellow)" stroke="var(--color-ink)" strokeWidth="3" vectorEffect="non-scaling-stroke" /><circle r="3" fill="var(--color-red)" /></g>}
     </svg>
   )
 }

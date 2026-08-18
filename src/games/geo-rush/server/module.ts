@@ -3,6 +3,7 @@ import { ApiError } from '@/flexgames/core/errors'
 import { createGeoState, toPublicGeoState } from '../engine/state-machine'
 import type { GeoConfig } from '../types'
 import { geoConfigSchema, geoSubmitSchema, geoTickSchema } from '../validations'
+import { loadPlayableCountries } from './country-catalog'
 import { advanceGeoIfExpired, submitGeoAnswer } from './service'
 
 export const DEFAULT_GEO_CONFIG: GeoConfig = {
@@ -25,7 +26,8 @@ export const geoRushServer: GameServerModule = {
 
   async startSession({ db, room, players, sessionId, config }) {
     const parsed = geoConfigSchema.parse(config)
-    const state = createGeoState(players, parsed, `${sessionId}:${room.id}`, Date.now())
+    const countries = await loadPlayableCountries(db)
+    const state = createGeoState(players, parsed, `${sessionId}:${room.id}`, Date.now(), countries)
     const { error } = await db.from('geo_sessions').insert({
       session_id: sessionId,
       room_id: room.id,

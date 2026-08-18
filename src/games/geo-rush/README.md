@@ -12,6 +12,8 @@ Le preset « Mix complet » répartit les six variantes en cycles mélangés. Un
 
 `data/countries.ts` construit un catalogue statique d'États souverains à partir de `world-countries` 5.1.0 : code ISO, nom français, capitale, région, niveau et alias. Les territoires dépendants sont exclus. `world-atlas` 2.0.2 fournit les frontières Natural Earth 1:50m ; `flag-icons` 7.5.0 fournit les drapeaux SVG locaux.
 
+Le dashboard admin fusionne ce socle avec `geo_country_overrides`. Un administrateur peut corriger le nom, la capitale, le niveau et les réponses acceptées, ou désactiver un pays. Les identifiants ISO, régions et géométries restent versionnés dans le code afin qu'une saisie admin ne puisse pas casser une carte. Les changements s'appliquent aux nouvelles parties ; la restauration supprime la surcharge et reprend les valeurs du socle.
+
 - Facile : pays mondialement connus.
 - Normal : pool facile + pays intermédiaires.
 - Difficile : presque tous les États souverains du catalogue.

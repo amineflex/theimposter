@@ -2,6 +2,7 @@ import type { Player } from '@/flexgames/core/types'
 import type {
   GeoConfig, GeoLeaderboardEntry, GeoPrivateState, GeoPublicQuestion, GeoPublicState, GeoRoundResult, GeoStoredAnswer,
 } from '../types'
+import type { GeoCountry } from '../data/countries'
 import { generateQuestions } from './questions'
 
 export const COUNTDOWN_MS = 3_000
@@ -12,7 +13,13 @@ function at(now: number, delay: number): string {
   return new Date(now + delay).toISOString()
 }
 
-export function createGeoState(players: Player[], config: GeoConfig, seed: string, now: number): GeoPrivateState {
+export function createGeoState(
+  players: Player[],
+  config: GeoConfig,
+  seed: string,
+  now: number,
+  countries?: readonly GeoCountry[],
+): GeoPrivateState {
   const participants = players.map((player, index) => ({
     id: player.id,
     name: player.nickname,
@@ -29,7 +36,7 @@ export function createGeoState(players: Player[], config: GeoConfig, seed: strin
     totalQuestions: config.questionCount,
     phaseStartedAt: new Date(now).toISOString(),
     phaseEndsAt: at(now, COUNTDOWN_MS),
-    questions: generateQuestions(config, seed),
+    questions: generateQuestions(config, seed, countries),
     responseCount: 0,
     totalPlayers: players.length,
     reveal: null,

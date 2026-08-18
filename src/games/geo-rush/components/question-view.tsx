@@ -10,7 +10,7 @@ import { CountrySilhouette, WorldMap } from './map-visual'
 
 function QuestionVisual({ question }: { question: GeoPublicQuestion }) {
   if (question.type === 'map-capital' || question.type === 'map-country') {
-    return <WorldMap geometryIndex={question.geometryIndex} />
+    return <WorldMap geometryIndex={question.geometryIndex} focused={question.type === 'map-capital'} />
   }
   if (question.type === 'silhouette-country') {
     return <CountrySilhouette geometryIndex={question.geometryIndex} />

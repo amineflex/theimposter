@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { gameSettingsSchema, mrWhiteGuessSchema, voteSchema } from '../validations'
+import {
+  adminImpostorWordSchema,
+  adminWordPairSchema,
+  gameSettingsSchema,
+  mrWhiteGuessSchema,
+  voteSchema,
+} from '../validations'
 import { defaultSettings } from '../engine/engine'
 
 describe('gameSettingsSchema', () => {
@@ -71,5 +77,40 @@ describe('voteSchema / mrWhiteGuessSchema', () => {
     const gameId = '00000000-0000-4000-8000-000000000000'
     expect(mrWhiteGuessSchema.safeParse({ gameId, guess: '   ' }).success).toBe(false)
     expect(mrWhiteGuessSchema.safeParse({ gameId, guess: 'Pizza' }).success).toBe(true)
+  })
+})
+
+describe('catalogue administrateur', () => {
+  it('valide toutes les données modifiables des deux modes', () => {
+    const common = {
+      category: 'Technologie',
+      difficulty: 'medium' as const,
+      packs: ['classique'],
+      acceptedAnswers: ['portable'],
+      isActive: true,
+    }
+    expect(adminImpostorWordSchema.safeParse({ ...common, word: 'Téléphone', hint: 'Communication' }).success).toBe(true)
+    expect(adminWordPairSchema.safeParse({ ...common, civilianWord: 'Téléphone', undercoverWord: 'Tablette' }).success).toBe(true)
+  })
+
+  it('refuse une entrée sans pack ou avec trop de réponses acceptées', () => {
+    expect(adminWordPairSchema.safeParse({
+      civilianWord: 'Téléphone',
+      undercoverWord: 'Tablette',
+      category: 'Technologie',
+      difficulty: 'medium',
+      packs: [],
+      acceptedAnswers: [],
+      isActive: true,
+    }).success).toBe(false)
+    expect(adminImpostorWordSchema.safeParse({
+      word: 'Téléphone',
+      hint: 'Communication',
+      category: 'Technologie',
+      difficulty: 'medium',
+      packs: ['classique'],
+      acceptedAnswers: Array.from({ length: 11 }, (_, index) => `réponse ${index}`),
+      isActive: true,
+    }).success).toBe(false)
   })
 })

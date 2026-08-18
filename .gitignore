@@ -16,3 +16,4 @@ next-env.d.ts
 /playwright-report/
 /test-results/
 /.npm-cache/
+/supabase/.temp/

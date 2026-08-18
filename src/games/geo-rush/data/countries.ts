@@ -101,10 +101,14 @@ export const COUNTRIES: GeoCountry[] = rawCountries.flatMap((country) => {
   }]
 }).sort((a, b) => a.name.localeCompare(b.name, 'fr'))
 
-export function countriesFor(difficulty: GeoDifficulty, region: GeoRegion): GeoCountry[] {
+export function countriesFor(
+  difficulty: GeoDifficulty,
+  region: GeoRegion,
+  countries: readonly GeoCountry[] = COUNTRIES,
+): GeoCountry[] {
   const allowedDifficulties: GeoDifficulty[] =
     difficulty === 'easy' ? ['easy'] : difficulty === 'normal' ? ['easy', 'normal'] : ['easy', 'normal', 'hard']
-  return COUNTRIES.filter((country) =>
+  return countries.filter((country) =>
     allowedDifficulties.includes(country.difficulty) && (region === 'world' || country.region === region),
   )
 }
