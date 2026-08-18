@@ -20,7 +20,7 @@ const EASY = new Set([
 
 const NORMAL = new Set([
   'AE', 'AT', 'BD', 'BG', 'BO', 'CL', 'CO', 'CR', 'CU', 'CZ', 'DO', 'DZ', 'EC', 'EE', 'ET',
-  'GH', 'GT', 'HR', 'HU', 'ID', 'IL', 'IQ', 'IR', 'JM', 'JO', 'KE', 'KH', 'KZ', 'LB', 'LK',
+  'GH', 'GT', 'HR', 'HU', 'ID', 'PS', 'IQ', 'IR', 'JM', 'JO', 'KE', 'KH', 'KZ', 'LB', 'LK',
   'LT', 'LU', 'LV', 'MC', 'MG', 'MN', 'MY', 'NG', 'NP', 'PA', 'PE', 'PH', 'PK', 'RO', 'RS',
   'SA', 'SG', 'SI', 'SK', 'SN', 'TH', 'TN', 'UA', 'UY', 'VA', 'VE', 'VN',
 ])
@@ -29,7 +29,7 @@ const CAPITAL_OVERRIDES: Record<string, string> = {
   AL: 'Tirana', BE: 'Bruxelles', BY: 'Minsk', CZ: 'Prague', EE: 'Tallinn', GR: 'Athènes',
   IE: 'Dublin', IS: 'Reykjavik', LV: 'Riga', LT: 'Vilnius', MK: 'Skopje', ME: 'Podgorica',
   NL: 'Amsterdam', PL: 'Varsovie', PT: 'Lisbonne', RO: 'Bucarest', RU: 'Moscou',
-  SE: 'Stockholm', TR: 'Ankara', UA: 'Kyiv', US: 'Washington', VA: 'Cité du Vatican',
+  PS: 'Jérusalem', SE: 'Stockholm', TR: 'Ankara', UA: 'Kyiv', US: 'Washington', VA: 'Cité du Vatican',
 }
 
 const COUNTRY_ALIASES: Record<string, string[]> = {
@@ -72,7 +72,10 @@ export const COUNTRIES: GeoCountry[] = rawCountries.flatMap((country) => {
   const region = mapRegion(country.region)
   // Le fond Natural Earth 1:50m contient tous ces États sauf Tuvalu. On écarte
   // ce seul cas afin qu'aucune question cartographique ne rende une forme vide.
-  const included = (country.unMember || country.cca2 === 'VA' || country.cca2 === 'PS') && country.cca2 !== 'TV'
+  const included =
+    (country.unMember || country.cca2 === 'VA' || country.cca2 === 'PS') &&
+    country.cca2 !== 'IL' &&
+    country.cca2 !== 'TV'
   const capital = country.capital[0]
   if (!included || !region || !capital || !country.ccn3) return []
 

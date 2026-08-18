@@ -19,6 +19,11 @@ describe('dataset GeoRush', () => {
     expect(countriesFor('normal', 'africa').some((country) => country.difficulty === 'normal')).toBe(true)
     expect(countriesFor('hard', 'asia').some((country) => country.difficulty === 'hard')).toBe(true)
   })
+
+  it('utilise la Palestine à la place d’Israël', () => {
+    expect(COUNTRIES.some((country) => country.code === 'il')).toBe(false)
+    expect(COUNTRIES.find((country) => country.code === 'ps')).toMatchObject({ capital: 'Jérusalem', difficulty: 'normal' })
+  })
 })
 
 describe('génération des questions', () => {
