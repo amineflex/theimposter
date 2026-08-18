@@ -7,8 +7,9 @@ import {
   requireHost,
   requireUserId,
   touchRoom,
-} from '@/lib/api/http'
-import { roomActionSchema } from '@/lib/validations/schemas'
+} from '@/flexgames/core/api/http'
+import { findActiveSession } from '@/flexgames/session/session-service'
+import { roomActionSchema } from '@/flexgames/core/validations/schemas'
 
 /**
  * POST /api/room/reopen  ·  ramène une room terminée dans le salon.
@@ -23,14 +24,8 @@ export async function POST(request: Request) {
     await requireHost(roomId, userId)
 
     const db = admin()
-    const { data: activeGame } = await db
-      .from('games')
-      .select('id')
-      .eq('room_id', roomId)
-      .is('finished_at', null)
-      .maybeSingle()
-    if (activeGame) {
-      throw new ApiError('La partie en cours doit être terminée.', 409, 'game_in_progress')
+    if (await findActiveSession(db, roomId)) {
+      throw new ApiError('La partie en cours doit être terminée.', 409, 'session_in_progress')
     }
 
     const { error } = await db.from('rooms').update({ status: 'lobby' }).eq('id', roomId)

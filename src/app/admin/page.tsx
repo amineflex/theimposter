@@ -1,8 +1,8 @@
-import { getSupabaseServerClient } from '@/lib/supabase/server'
-import { getSupabaseAdminClient } from '@/lib/supabase/admin'
-import { AdminDashboard } from '@/features/admin/admin-dashboard'
-import { AdminLogin } from '@/features/admin/admin-login'
-import type { AdminStats } from '@/types/db'
+import { getSupabaseServerClient } from '@/flexgames/core/supabase/server'
+import { getSupabaseAdminClient } from '@/flexgames/core/supabase/admin'
+import { AdminDashboard } from '@/flexgames/admin/components/admin-dashboard'
+import { AdminLogin } from '@/flexgames/admin/components/admin-login'
+import type { AdminStats } from '@/flexgames/core/db'
 
 /**
  * Zone d'administration.

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import { RoomScreen } from '@/features/online-game/room-screen'
-import { normalizeRoomCode } from '@/lib/room-code'
+import { RoomScreen } from '@/flexgames/rooms/room-screen'
+import { normalizeRoomCode } from '@/flexgames/rooms/room-code'
 
 export const metadata: Metadata = {
   title: 'Salon',

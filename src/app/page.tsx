@@ -1,17 +1,19 @@
-import Link from 'next/link'
-import { GameLogo } from '@/components/party/game-logo'
-import { PartyButton } from '@/components/party/party-button'
-import { ShapeRow, Shape } from '@/components/party/decor'
-import { SoundToggle } from '@/components/layout/sound-toggle'
-import { JoinCodeCard } from '@/features/lobby/join-code-card'
+import { FlexLogo } from '@/flexgames/ui/flex-logo'
+import { GameCard } from '@/flexgames/ui/game-card'
+import { ShapeRow, Shape } from '@/flexgames/ui/decor'
+import { SoundToggle } from '@/flexgames/audio/sound-toggle'
+import { getCatalogGames } from '@/flexgames/game-registry'
 import { t } from '@/i18n'
 
 /**
- * Accueil : pas de landing page. Le logo, deux gros boutons, et on joue.
+ * Accueil FlexGames : le logo et le catalogue. On choisit un jeu, puis sa page
+ * regroupe toutes les actions disponibles.
  */
 export default function HomePage() {
+  const games = getCatalogGames()
+
   return (
-    <main className="flex flex-1 flex-col justify-center py-8">
+    <main className="flex flex-1 flex-col py-8">
       <div className="relative flex flex-col items-center">
         <span aria-hidden className="absolute -top-2 left-2 -rotate-12">
           <Shape shape="star" tone="yellow" size={34} />
@@ -20,38 +22,34 @@ export default function HomePage() {
           <Shape shape="dot" tone="blue" size={22} />
         </span>
 
-        <GameLogo />
+        <FlexLogo />
 
         <p className="mt-5 whitespace-pre-line text-center font-display text-lg font-extrabold uppercase leading-tight text-ink">
           {t('app.tagline')}
         </p>
       </div>
 
-      <nav className="mt-9 flex flex-col gap-4" aria-label="Modes de jeu">
-        <PartyButton asChild variant="yellow" size="xl" block>
-          <Link href="/local">{t('home.localGame')}</Link>
-        </PartyButton>
+      <section className="mt-9">
+        <h2 className="toy-title-ink mb-1 text-2xl uppercase">{t('catalog.title')}</h2>
+        <p className="mb-4 text-xs font-bold text-ink-soft">{t('catalog.subtitle')}</p>
 
-        <PartyButton asChild variant="red" size="xl" block>
-          <Link href="/online">{t('home.onlineGame')}</Link>
-        </PartyButton>
-      </nav>
+        <ul className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2">
+          {games.map((game, index) => (
+            <li key={game.manifest.id}>
+              <GameCard gameId={game.manifest.id} index={index} />
+            </li>
+          ))}
+        </ul>
+      </section>
 
-      <div className="mt-7">
-        <JoinCodeCard />
-      </div>
-
-      <div className="mt-7 flex flex-col items-center gap-3">
-        <PartyButton asChild variant="ghost" size="sm">
-          <Link href="/regles">{t('home.howToPlay')}</Link>
-        </PartyButton>
+      <div className="mt-7 flex justify-center">
         <SoundToggle />
       </div>
 
       <ShapeRow className="mt-8" />
 
       <footer className="mt-4 flex flex-col items-center gap-1 text-center text-xs font-bold uppercase tracking-wide text-ink-soft">
-        <span>3 à 12 joueurs · jouable hors connexion en local</span>
+        <span>Jouable à plusieurs sur un téléphone · ou chacun sur le sien</span>
         <a
           href="https://amineflex.is-a.dev"
           target="_blank"

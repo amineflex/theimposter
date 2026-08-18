@@ -2,9 +2,10 @@ import type { Metadata, Viewport } from 'next'
 import { Baloo_2, Nunito } from 'next/font/google'
 import { Toaster } from 'sonner'
 import './globals.css'
-import { OfflineBanner } from '@/components/layout/offline-banner'
-import { ScatteredShapes } from '@/components/party/decor'
-import { ServiceWorkerRegistrar } from '@/components/layout/service-worker-registrar'
+import 'flag-icons/css/flag-icons.min.css'
+import { OfflineBanner } from '@/flexgames/ui/offline-banner'
+import { ScatteredShapes } from '@/flexgames/ui/decor'
+import { ServiceWorkerRegistrar } from '@/flexgames/ui/service-worker-registrar'
 import { t } from '@/i18n'
 
 /** Police d'affichage : massive et arrondie, pour les titres et les boutons. */
@@ -28,18 +29,18 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'The Imposter  ·  party game de déduction',
-    template: '%s · The Imposter',
+    default: 'FlexGames  ·  mini-jeux de soirée',
+    template: '%s · FlexGames',
   },
   description: `${t('app.description')}  ·  by amineflex`,
-  applicationName: 'The Imposter',
+  applicationName: 'FlexGames',
   authors: [{ name: 'amineflex', url: 'https://amineflex.is-a.dev' }],
   creator: 'amineflex',
   publisher: 'amineflex',
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
-    title: 'The Imposter',
+    title: 'FlexGames',
     statusBarStyle: 'default',
   },
   icons: {
@@ -53,18 +54,18 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'fr_FR',
     url: siteUrl,
-    siteName: 'The Imposter',
-    title: 'The Imposter  ·  party game de déduction',
+    siteName: 'FlexGames',
+    title: 'FlexGames  ·  mini-jeux de soirée',
     description: t('app.description'),
-    images: [{ url: '/icons/og.png', width: 1200, height: 630, alt: 'The Imposter' }],
+    images: [{ url: '/icons/og.png', width: 1200, height: 630, alt: 'FlexGames' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'The Imposter',
+    title: 'FlexGames',
     description: t('app.description'),
     images: ['/icons/og.png'],
   },
-  keywords: ['party game', 'jeu de déduction', 'imposteur', 'undercover', 'mr white', 'jeu entre amis'],
+  keywords: ['party game', 'mini-jeux', 'jeu entre amis', 'imposteur', 'undercover', 'jeu de soirée'],
 }
 
 export const viewport: Viewport = {

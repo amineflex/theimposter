@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { admin, handle, jsonOk, parseBody, requireAdminUser } from '@/lib/api/http'
+import { admin, handle, jsonOk, parseBody, requireAdminUser } from '@/flexgames/core/api/http'
 
 const actionSchema = z.object({
   roomId: z.string().uuid(),
@@ -13,7 +13,7 @@ export async function GET() {
     const { data, error } = await admin()
       .from('rooms')
       .select(
-        'id, code, status, visibility, mode, max_players, created_at, last_activity_at, expires_at, room_players ( id )',
+        'id, code, status, visibility, game_id, max_players, created_at, last_activity_at, expires_at, room_players ( id )',
       )
       .order('last_activity_at', { ascending: false })
       .limit(60)
@@ -36,8 +36,8 @@ export async function POST(request: Request) {
     const db = admin()
 
     await db
-      .from('games')
-      .update({ finished_at: new Date().toISOString(), phase: 'results' })
+      .from('game_sessions')
+      .update({ status: 'abandoned', finished_at: new Date().toISOString() })
       .eq('room_id', input.roomId)
       .is('finished_at', null)
 

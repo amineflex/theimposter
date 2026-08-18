@@ -1,5 +1,5 @@
-import { admin, handle, jsonOk, parseBody, requireAdminUser } from '@/lib/api/http'
-import { adminReportUpdateSchema } from '@/lib/validations/schemas'
+import { admin, handle, jsonOk, parseBody, requireAdminUser } from '@/flexgames/core/api/http'
+import { adminReportUpdateSchema } from '@/flexgames/core/validations/schemas'
 
 /** PATCH /api/admin/reports  ·  change le statut d'un signalement. */
 export async function PATCH(request: Request) {

@@ -9,10 +9,10 @@
  */
 import { writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { IMPOSTOR_WORDS } from '../src/data/impostor-words'
-import { PACKS } from '../src/data/packs'
-import { slugify } from '../src/data/slug'
-import { WORD_PAIRS } from '../src/data/word-pairs'
+import { IMPOSTOR_WORDS } from '../src/games/the-imposter/data/impostor-words'
+import { PACKS } from '../src/games/the-imposter/data/packs'
+import { slugify } from '../src/games/the-imposter/data/slug'
+import { WORD_PAIRS } from '../src/games/the-imposter/data/word-pairs'
 
 function q(value: string): string {
   return `'${value.replace(/'/g, "''")}'`

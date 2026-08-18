@@ -1,10 +1,7 @@
 import { z } from 'zod'
-import { ApiError, admin, handle, jsonOk, parseBody, requireAdminUser } from '@/lib/api/http'
-import { slugify } from '@/data/slug'
-import {
-  adminImpostorWordSchema,
-  adminWordPairSchema,
-} from '@/lib/validations/schemas'
+import { ApiError, admin, handle, jsonOk, parseBody, requireAdminUser } from '@/flexgames/core/api/http'
+import { slugify } from '@/games/the-imposter/data/slug'
+import { adminImpostorWordSchema, adminWordPairSchema } from '@/games/the-imposter/validations'
 
 const createSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('impostor'), data: adminImpostorWordSchema }),

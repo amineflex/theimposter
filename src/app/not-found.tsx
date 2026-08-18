@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { PartyButton } from '@/components/party/party-button'
-import { GameMark } from '@/components/party/game-logo'
+import { PartyButton } from '@/flexgames/ui/party-button'
+import { GameMark } from '@/games/the-imposter/components/game-logo'
 import { t } from '@/i18n'
 
 export default function NotFound() {

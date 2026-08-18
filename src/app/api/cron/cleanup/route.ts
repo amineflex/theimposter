@@ -1,4 +1,4 @@
-import { admin, handle, jsonError, jsonOk } from '@/lib/api/http'
+import { admin, handle, jsonError, jsonOk } from '@/flexgames/core/api/http'
 
 /**
  * GET /api/cron/cleanup  ·  expire et purge les rooms abandonnées.

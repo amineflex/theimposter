@@ -7,10 +7,11 @@ import {
   requireRoomMember,
   requireUserId,
   touchRoom,
-} from '@/lib/api/http'
-import { removePlayerFromActiveGame } from '@/lib/game/service'
-import { roomActionSchema } from '@/lib/validations/schemas'
-import type { RoomPlayerRow } from '@/types/db'
+} from '@/flexgames/core/api/http'
+import { requireGameModule } from '@/flexgames/core/api/game-routing'
+import { findActiveSession } from '@/flexgames/session/session-service'
+import { roomActionSchema } from '@/flexgames/core/validations/schemas'
+import type { RoomPlayerRow } from '@/flexgames/core/db'
 
 /**
  * POST /api/room/leave  ·  quitte définitivement une room.
@@ -31,9 +32,13 @@ export async function POST(request: Request) {
       // En lobby, le joueur est retiré de la table.
       await db.from('room_players').delete().eq('id', player.id)
     } else {
-      // En partie, on le marque absent et il est éliminé de la partie en cours.
+      // En partie, on le marque absent et le jeu décide de la suite.
       await db.from('room_players').update({ is_present: false }).eq('id', player.id)
-      await removePlayerFromActiveGame(db, roomId, player.id)
+      const session = await findActiveSession(db, roomId)
+      if (session) {
+        const { module } = requireGameModule(session.game_id)
+        await module.onPlayerLeft?.({ db, roomId, sessionId: session.id, playerId: player.id })
+      }
     }
 
     const { data: remainingRows } = await db

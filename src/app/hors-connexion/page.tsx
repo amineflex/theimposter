@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { WifiOff } from 'lucide-react'
-import { PartyButton } from '@/components/party/party-button'
-import { PartyCard } from '@/components/party/party-card'
-import { StickerBadge } from '@/components/party/sticker-badge'
+import { PartyButton } from '@/flexgames/ui/party-button'
+import { PartyCard } from '@/flexgames/ui/party-card'
+import { StickerBadge } from '@/flexgames/ui/sticker-badge'
 import { t } from '@/i18n'
 
 export const metadata: Metadata = {

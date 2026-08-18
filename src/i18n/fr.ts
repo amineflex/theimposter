@@ -6,10 +6,24 @@
  * `src/i18n/index.ts` (aucune modification de composant nécessaire).
  */
 export const fr = {
-  'app.name': 'THE IMPOSTER',
-  'app.tagline': "Trouve l'intrus.\nOu fais semblant.",
+  // --- Plateforme FlexGames ---------------------------------------------------
+  'app.name': 'FLEXGAMES',
+  'app.tagline': 'Des mini-jeux.\nUne seule room.',
   'app.description':
-    "Party game social de déduction : un mot secret, un intrus, et beaucoup de mauvaise foi. Jouez à plusieurs sur un seul téléphone ou chacun sur le sien.",
+    "FlexGames : des mini-jeux de soirée à jouer à plusieurs sur un seul téléphone ou chacun sur le sien. Créez une room, partagez le code, et enchaînez les parties.",
+
+  'catalog.title': 'Choisis ton jeu',
+  'catalog.subtitle': 'Un code, une room, autant de parties que vous voulez.',
+  'catalog.play': 'Jouer',
+  'catalog.comingSoon': 'Bientôt',
+  'catalog.playersRange': '{min}–{max} joueurs',
+  'catalog.localMode': 'Un seul téléphone',
+  'catalog.onlineMode': 'Un appareil par joueur',
+  'catalog.howToPlay': 'Comment jouer',
+  'catalog.allGames': 'Tous les jeux',
+  'catalog.experimental': 'Expérimental',
+
+  'error.gameUnavailable': "Ce jeu n'est pas disponible pour le moment.",
 
   'common.back': 'Retour',
   'common.backHome': "Retour à l'accueil",
@@ -276,7 +290,7 @@ export const fr = {
   'admin.stats.activeRooms': 'Rooms actives',
   'admin.stats.avgDuration': 'Durée moyenne',
   'admin.stats.avgPlayers': 'Joueurs / partie',
-  'admin.stats.topMode': 'Mode le plus joué',
+  'admin.stats.topGame': 'Jeu le plus joué',
   'admin.stats.topPacks': 'Packs les plus joués',
   'admin.stats.words': 'Entrées en base',
   'admin.stats.openReports': 'Signalements ouverts',

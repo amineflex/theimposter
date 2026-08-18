@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import { JoinRoomForm } from '@/features/lobby/join-room-form'
-import { normalizeRoomCode } from '@/lib/room-code'
+import { JoinRoomForm } from '@/flexgames/lobby/join-room-form'
+import { normalizeRoomCode } from '@/flexgames/rooms/room-code'
 
 export const metadata: Metadata = {
   title: 'Rejoindre une partie',

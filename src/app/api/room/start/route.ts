@@ -1,4 +1,3 @@
-import { z } from 'zod'
 import {
   ApiError,
   admin,
@@ -9,25 +8,16 @@ import {
   requireHost,
   requireUserId,
   touchRoom,
-} from '@/lib/api/http'
-import { startGame } from '@/lib/game/service'
+} from '@/flexgames/core/api/http'
+import { requireGameModule } from '@/flexgames/core/api/game-routing'
+import { startSession } from '@/flexgames/session/session-service'
+import { startGameSchema } from '@/flexgames/core/validations/schemas'
 
-const startSchema = z.object({
-  roomId: z.string().uuid(),
-  /**
-   * Entrées de mots récemment jouées côté client (anti-répétition sans compte).
-   * Le mode local mémorise des slugs et le mode en ligne des UUID : on accepte
-   * les deux, ces valeurs ne servent qu'à filtrer un tirage.
-   */
-  excludeWordIds: z.array(z.string().max(80)).max(60).optional(),
-  order: z.enum(['random', 'as-is']).optional(),
-})
-
-/** POST /api/room/start  ·  l'hôte lance la partie. */
+/** POST /api/room/start  ·  l'hôte lance une partie du jeu de la room. */
 export async function POST(request: Request) {
   return handle(async () => {
     const userId = await requireUserId()
-    const input = await parseBody(request, startSchema)
+    const input = await parseBody(request, startGameSchema)
     const room = await fetchRoom(input.roomId)
     await requireHost(input.roomId, userId)
 
@@ -38,11 +28,15 @@ export async function POST(request: Request) {
       throw new ApiError("Cette partie n'est plus disponible.", 409, 'room_unavailable')
     }
 
-    const { gameId } = await startGame(admin(), room, {
-      excludeWordIds: input.excludeWordIds,
-      order: input.order,
-    })
+    const { module, manifest } = requireGameModule(room.game_id)
+    const session = await startSession(
+      admin(),
+      room,
+      module,
+      { minPlayers: manifest.minPlayers, maxPlayers: manifest.maxPlayers },
+      input.options ?? {},
+    )
     await touchRoom(input.roomId)
-    return jsonOk({ gameId })
+    return jsonOk({ sessionId: session.id })
   })
 }

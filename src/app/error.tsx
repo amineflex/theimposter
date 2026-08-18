@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { AlertTriangle } from 'lucide-react'
-import { PartyButton } from '@/components/party/party-button'
+import { PartyButton } from '@/flexgames/ui/party-button'
 import { t } from '@/i18n'
 
 /** Frontière d'erreur globale : message compréhensible, jamais de trace brute. */

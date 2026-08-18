@@ -1,5 +1,5 @@
-import { admin, handle, jsonOk, parseBody, requireAdminUser } from '@/lib/api/http'
-import { adminSettingSchema } from '@/lib/validations/schemas'
+import { admin, handle, jsonOk, parseBody, requireAdminUser } from '@/flexgames/core/api/http'
+import { adminSettingSchema } from '@/flexgames/core/validations/schemas'
 
 /** POST /api/admin/settings  ·  met à jour un réglage applicatif. */
 export async function POST(request: Request) {

@@ -9,10 +9,10 @@ import {
   parseBody,
   requireUserId,
   touchRoom,
-} from '@/lib/api/http'
-import { pickAvatarKey } from '@/lib/avatars'
-import { joinRoomSchema } from '@/lib/validations/schemas'
-import type { RoomPlayerRow } from '@/types/db'
+} from '@/flexgames/core/api/http'
+import { pickAvatarKey } from '@/flexgames/players/avatars'
+import { joinRoomSchema } from '@/flexgames/core/validations/schemas'
+import type { RoomPlayerRow } from '@/flexgames/core/db'
 
 /** POST /api/room/join  ·  rejoint une room via son code. */
 export async function POST(request: Request) {

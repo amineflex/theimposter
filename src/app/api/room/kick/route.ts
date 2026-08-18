@@ -8,10 +8,10 @@ import {
   requireHost,
   requireUserId,
   touchRoom,
-} from '@/lib/api/http'
-import { removePlayerFromActiveGame } from '@/lib/game/service'
-import { kickPlayerSchema } from '@/lib/validations/schemas'
-import type { RoomPlayerRow } from '@/types/db'
+} from '@/flexgames/core/api/http'
+import { removePlayerFromActiveGame } from '@/games/the-imposter/server/service'
+import { kickPlayerSchema } from '@/flexgames/core/validations/schemas'
+import type { RoomPlayerRow } from '@/flexgames/core/db'
 
 /** POST /api/room/kick  ·  l'hôte exclut un joueur. */
 export async function POST(request: Request) {

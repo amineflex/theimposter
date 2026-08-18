@@ -9,9 +9,9 @@ import {
   parseBody,
   requireRoomMember,
   requireUserId,
-} from '@/lib/api/http'
-import { chatMessageSchema } from '@/lib/validations/schemas'
-import { ALLOWED_REACTIONS } from '@/lib/chat-reactions'
+} from '@/flexgames/core/api/http'
+import { chatMessageSchema } from '@/flexgames/core/validations/schemas'
+import { ALLOWED_REACTIONS } from '@/flexgames/chat/reactions'
 
 
 /** POST /api/chat/send  ·  envoie un message ou une réaction. */

@@ -6,8 +6,8 @@ import {
   jsonOk,
   parseBody,
   requireUserId,
-} from '@/lib/api/http'
-import { reportSchema } from '@/lib/validations/schemas'
+} from '@/flexgames/core/api/http'
+import { reportSchema } from '@/flexgames/core/validations/schemas'
 
 /** POST /api/report  ·  signale un comportement problématique. */
 export async function POST(request: Request) {

@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
-import { PartyButton } from '@/components/party/party-button'
-import { PartyCard } from '@/components/party/party-card'
-import { StickerBadge } from '@/components/party/sticker-badge'
-import { GameBanner } from '@/components/party/game-banner'
-import { ShapeRow } from '@/components/party/decor'
+import { PartyButton } from '@/flexgames/ui/party-button'
+import { PartyCard } from '@/flexgames/ui/party-card'
+import { StickerBadge } from '@/flexgames/ui/sticker-badge'
+import { GameBanner } from '@/flexgames/ui/game-banner'
+import { ShapeRow } from '@/flexgames/ui/decor'
 import { t } from '@/i18n'
 
 export const metadata: Metadata = {
@@ -134,10 +134,10 @@ export default function RulesPage() {
 
       <div className="mt-5 flex flex-col gap-3">
         <PartyButton asChild variant="yellow" size="lg" block>
-          <Link href="/local">{t('home.localGame')}</Link>
+          <Link href="/play/the-imposter/local">{t('home.localGame')}</Link>
         </PartyButton>
         <PartyButton asChild variant="red" size="lg" block>
-          <Link href="/online">{t('home.onlineGame')}</Link>
+          <Link href="/play/the-imposter">{t('home.onlineGame')}</Link>
         </PartyButton>
       </div>
     </main>
