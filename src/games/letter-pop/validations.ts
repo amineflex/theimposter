@@ -28,7 +28,7 @@ export const letterPopConfigSchema = z.object({
   }
 })
 
-export const letterPopAnswersSchema = z.record(
+export const letterPopAnswersSchema = z.partialRecord(
   categorySchema,
   z.string().max(80, 'Une réponse ne peut pas dépasser 80 caractères.'),
 )

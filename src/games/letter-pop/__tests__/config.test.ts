@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { DEFAULT_LETTER_POP_CONFIG } from '../client'
-import { letterPopConfigSchema } from '../validations'
+import { letterPopConfigSchema, letterPopSaveSchema } from '../validations'
 
 describe('configuration LetterPop', () => {
   it('accepte les options officielles et refuse les valeurs hors lobby', () => {
@@ -13,5 +13,9 @@ describe('configuration LetterPop', () => {
   it('exige exactement le bon nombre de catégories en custom', () => {
     expect(letterPopConfigSchema.safeParse({ ...DEFAULT_LETTER_POP_CONFIG, preset: 'custom' }).success).toBe(true)
     expect(letterPopConfigSchema.safeParse({ ...DEFAULT_LETTER_POP_CONFIG, preset: 'custom', customCategories: ['animal'] }).success).toBe(false)
+  })
+
+  it('accepte un snapshot limité aux catégories de la manche', () => {
+    expect(letterPopSaveSchema.safeParse({ roundIndex: 0, answers: { animal: 'Chat' } }).success).toBe(true)
   })
 })
