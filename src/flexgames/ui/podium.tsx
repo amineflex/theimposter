@@ -7,6 +7,7 @@ export interface PodiumEntry {
   name: string
   avatarId: string
   score: number
+  rank?: number
 }
 
 export function Podium({ entries, currentPlayerId }: { entries: PodiumEntry[]; currentPlayerId?: string }) {
@@ -14,7 +15,7 @@ export function Podium({ entries, currentPlayerId }: { entries: PodiumEntry[]; c
   return (
     <div className="flex items-end justify-center gap-2 pt-5" aria-label="Podium final">
       {ordered.map((entry) => {
-        const actualRank = entries.findIndex((candidate) => candidate.id === entry.id) + 1
+        const actualRank = entry.rank ?? entries.findIndex((candidate) => candidate.id === entry.id) + 1
         return (
           <div key={entry.id} className={cn('flex min-w-0 flex-1 flex-col items-center', actualRank === 1 && '-mt-5')}>
             {actualRank === 1 ? <Crown className="mb-1 h-8 w-8 fill-yellow text-ink" aria-hidden /> : <Medal className="mb-1 h-6 w-6 text-ink" aria-hidden />}

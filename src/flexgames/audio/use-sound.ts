@@ -20,6 +20,9 @@ export type SoundName =
   | 'win'
   | 'lose'
   | 'turn'
+  | 'letter'
+  | 'complete'
+  | 'unique'
 
 interface Tone {
   frequency: number
@@ -65,6 +68,19 @@ const SOUNDS: Record<SoundName, Tone[]> = {
   lose: [
     { frequency: 392, duration: 0.16, type: 'triangle' },
     { frequency: 294, duration: 0.3, type: 'triangle', delay: 0.14 },
+  ],
+  letter: [
+    { frequency: 330, duration: 0.08, type: 'triangle', gain: 0.13 },
+    { frequency: 660, duration: 0.18, type: 'triangle', delay: 0.07, gain: 0.16 },
+  ],
+  complete: [
+    { frequency: 440, duration: 0.08, type: 'square', gain: 0.08 },
+    { frequency: 880, duration: 0.2, type: 'triangle', delay: 0.06, gain: 0.16 },
+  ],
+  unique: [
+    { frequency: 660, duration: 0.09, type: 'triangle', gain: 0.13 },
+    { frequency: 990, duration: 0.09, type: 'triangle', delay: 0.07, gain: 0.13 },
+    { frequency: 1320, duration: 0.18, type: 'sine', delay: 0.14, gain: 0.1 },
   ],
 }
 

@@ -1,6 +1,7 @@
 import type { GameDefinition } from '@/flexgames/core/game-definition'
 import { theImposter } from './the-imposter'
 import { geoRush } from './geo-rush'
+import { letterPop } from './letter-pop'
 
 /**
  * Inventaire des jeux FlexGames.
@@ -10,4 +11,4 @@ import { geoRush } from './geo-rush'
  *
  * Pour un jeu « bientôt disponible », un manifest suffit (sans `ui` ni `client`).
  */
-export const GAMES: readonly GameDefinition[] = [theImposter, geoRush]
+export const GAMES: readonly GameDefinition[] = [theImposter, geoRush, letterPop]
