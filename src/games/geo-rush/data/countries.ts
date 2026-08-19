@@ -1,13 +1,17 @@
 import rawCountries from 'world-countries'
 import type { GeoDifficulty, GeoRegion } from '../types'
+import { CAPITAL_COORDINATES } from './capital-coordinates'
 
 export interface GeoCountry {
   code: string
   numericId: string
   name: string
   capital: string
+  capitalCoordinates: readonly [number, number]
   region: Exclude<GeoRegion, 'world'>
   difficulty: GeoDifficulty
+  focusMap: boolean
+  preferCountryQuestions: boolean
   aliases: string[]
   capitalAliases: string[]
 }
@@ -77,7 +81,8 @@ export const COUNTRIES: GeoCountry[] = rawCountries.flatMap((country) => {
     country.cca2 !== 'IL' &&
     country.cca2 !== 'TV'
   const capital = country.capital[0]
-  if (!included || !region || !capital || !country.ccn3) return []
+  const capitalCoordinates = CAPITAL_COORDINATES[country.cca2.toLowerCase()]
+  if (!included || !region || !capital || !capitalCoordinates || !country.ccn3) return []
 
   const name = country.translations.fra?.common ?? country.name.common
   const difficulty: GeoDifficulty = EASY.has(country.cca2)
@@ -85,13 +90,17 @@ export const COUNTRIES: GeoCountry[] = rawCountries.flatMap((country) => {
     : NORMAL.has(country.cca2)
       ? 'normal'
       : 'hard'
+  const isolatedSmallIsland = country.borders.length === 0 && country.area < 75_000
   return [{
     code: country.cca2.toLowerCase(),
     numericId: country.ccn3,
     name,
     capital: CAPITAL_OVERRIDES[country.cca2] ?? capital,
+    capitalCoordinates,
     region,
     difficulty,
+    focusMap: country.area < 100_000,
+    preferCountryQuestions: difficulty === 'hard' && isolatedSmallIsland,
     aliases: uniqueAnswers([name, country.name.common, ...(COUNTRY_ALIASES[country.cca2] ?? [])]),
     capitalAliases: uniqueAnswers([
       CAPITAL_OVERRIDES[country.cca2] ?? capital,

@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Check, Flag, LockKeyhole, Send } from 'lucide-react'
+import { Check, Flag, LockKeyhole, MapPin, Send } from 'lucide-react'
 import { Countdown } from '@/flexgames/ui/countdown'
 import { PartyButton } from '@/flexgames/ui/party-button'
 import { PartyCard } from '@/flexgames/ui/party-card'
@@ -10,7 +10,20 @@ import { CountrySilhouette, WorldMap } from './map-visual'
 
 function QuestionVisual({ question }: { question: GeoPublicQuestion }) {
   if (question.type === 'map-capital' || question.type === 'map-country') {
-    return <WorldMap geometryIndex={question.geometryIndex} focused={question.type === 'map-capital'} />
+    return (
+      <div>
+        {question.type === 'map-capital' && (
+          <div className="mb-3 flex items-center justify-center gap-2 font-display text-sm font-extrabold uppercase tracking-wide text-red">
+            <MapPin className="h-5 w-5 fill-red text-ink" aria-hidden /> Capitale à trouver
+          </div>
+        )}
+        <WorldMap
+          geometryIndex={question.geometryIndex}
+          focused={question.type === 'map-capital' || question.focused}
+          markerCoordinates={question.type === 'map-capital' ? question.capitalCoordinates : undefined}
+        />
+      </div>
+    )
   }
   if (question.type === 'silhouette-country') {
     return <CountrySilhouette geometryIndex={question.geometryIndex} />
@@ -67,7 +80,7 @@ export function QuestionView({ question, round, total, remaining, duration, lock
         </div>
       ) : (
         <form className="flex gap-2" onSubmit={(event) => { event.preventDefault(); void submit(answer) }}>
-          <input value={answer} onChange={(event) => setAnswer(event.target.value)} disabled={locked} autoComplete="off" inputMode="text" placeholder="Ta réponse…" className="min-h-13 min-w-0 flex-1 rounded-blob border-3 border-ink bg-paper px-4 text-base font-bold text-ink shadow-toy placeholder:text-ink-soft" />
+          <input value={answer} onChange={(event) => setAnswer(event.target.value)} disabled={locked} autoComplete="off" inputMode="text" placeholder={question.type === 'map-capital' ? 'Écris le nom de la capitale…' : 'Ta réponse…'} className="min-h-13 min-w-0 flex-1 rounded-blob border-3 border-ink bg-paper px-4 text-base font-bold text-ink shadow-toy placeholder:text-ink-soft" />
           <PartyButton type="submit" variant="yellow" size="icon" loading={pending} aria-label="Envoyer"><Send className="h-5 w-5" /></PartyButton>
         </form>
       )}

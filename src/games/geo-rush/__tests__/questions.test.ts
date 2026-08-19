@@ -24,6 +24,13 @@ describe('dataset GeoRush', () => {
     expect(COUNTRIES.some((country) => country.code === 'il')).toBe(false)
     expect(COUNTRIES.find((country) => country.code === 'ps')).toMatchObject({ capital: 'Jérusalem', difficulty: 'normal' })
   })
+
+  it('connaît la position réelle de chaque capitale', () => {
+    expect(COUNTRIES).toHaveLength(193)
+    expect(COUNTRIES.every((country) => country.capitalCoordinates.every(Number.isFinite))).toBe(true)
+    expect(COUNTRIES.find((country) => country.code === 'be')?.capitalCoordinates).toEqual([4.34878, 50.85045])
+    expect(COUNTRIES.find((country) => country.code === 'ps')?.capitalCoordinates).toEqual([35.2137, 31.7683])
+  })
 })
 
 describe('génération des questions', () => {
@@ -52,5 +59,14 @@ describe('génération des questions', () => {
       expect(new Set(question.choices)).toHaveLength(4)
       expect(question.choices).toContain(question.correctAnswer)
     }
+  })
+
+  it('demande le pays et zoome pour les petites îles isolées difficiles', () => {
+    const islands = COUNTRIES.filter((country) => country.preferCountryQuestions)
+    const questions = generateQuestions({ ...CONFIG, difficulty: 'hard' }, 'islands', islands)
+
+    expect(islands.some((country) => country.code === 'bs')).toBe(true)
+    expect(questions.every((question) => !['map-capital', 'country-capital', 'capital-country'].includes(question.type))).toBe(true)
+    expect(questions.filter((question) => question.type === 'map-country').every((question) => question.focused)).toBe(true)
   })
 })

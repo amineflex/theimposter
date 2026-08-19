@@ -29,15 +29,22 @@ interface GeoQuestionBase {
 }
 
 export type GeoPublicQuestion =
-  | (GeoQuestionBase & { type: 'map-capital'; answerMode: 'text'; geometryIndex: number })
+  | (GeoQuestionBase & {
+      type: 'map-capital'
+      answerMode: 'text'
+      geometryIndex: number
+      capitalCoordinates: readonly [number, number]
+    })
   | (GeoQuestionBase & { type: 'capital-country'; answerMode: 'text' })
   | (GeoQuestionBase & { type: 'flag-country'; answerMode: 'choices'; choices: string[]; countryCode: string })
   | (GeoQuestionBase & {
-      type: 'map-country' | 'silhouette-country'
+      type: 'map-country'
       answerMode: 'choices'
       choices: string[]
       geometryIndex: number
+      focused: boolean
     })
+  | (GeoQuestionBase & { type: 'silhouette-country'; answerMode: 'choices'; choices: string[]; geometryIndex: number })
   | (GeoQuestionBase & { type: 'country-capital'; answerMode: 'choices'; choices: string[] })
 
 export type GeoQuestion = GeoPublicQuestion & {

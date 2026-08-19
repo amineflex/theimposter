@@ -47,9 +47,11 @@ const EMPTY: RoomSnapshot = {
 export function useRoom(code: string): RoomSnapshot & { refresh: RefreshFn } {
   const [state, setState] = React.useState<RoomSnapshot>(EMPTY)
   const userIdRef = React.useRef<string | null>(null)
+  const refreshIdRef = React.useRef(0)
 
   const refresh = React.useCallback<RefreshFn>(
     async (options = {}) => {
+      const refreshId = ++refreshIdRef.current
       const supabase = getSupabaseBrowserClient()
       if (!options.silent) setState((prev) => ({ ...prev, reconnecting: true }))
 
@@ -57,13 +59,15 @@ export function useRoom(code: string): RoomSnapshot & { refresh: RefreshFn } {
         const userId = userIdRef.current ?? (await ensureAnonymousSession())
         userIdRef.current = userId
 
-        const { data: roomData } = await supabase
+        const { data: roomData, error: roomError } = await supabase
           .from('rooms')
           .select('*')
           .eq('code', code)
           .maybeSingle()
+        if (roomError) throw roomError
         const room = roomData as RoomRow | null
         if (!room) {
+          if (refreshId !== refreshIdRef.current) return
           setState((prev) => ({ ...prev, loading: false, reconnecting: false, error: 'not_found' }))
           return
         }
@@ -83,8 +87,12 @@ export function useRoom(code: string): RoomSnapshot & { refresh: RefreshFn } {
             .order('created_at', { ascending: false })
             .limit(60),
         ])
+        const snapshotError = playersResult.error ?? sessionResult.error ?? messagesResult.error
+        if (snapshotError) throw snapshotError
 
         const players = (playersResult.data ?? []) as RoomPlayerRow[]
+        // Un ancien fetch ne doit jamais faire reculer la phase affichée.
+        if (refreshId !== refreshIdRef.current) return
         setState({
           room,
           players,
@@ -96,6 +104,7 @@ export function useRoom(code: string): RoomSnapshot & { refresh: RefreshFn } {
           error: null,
         })
       } catch (error) {
+        if (refreshId !== refreshIdRef.current) return
         setState((prev) => ({
           ...prev,
           loading: false,
@@ -107,39 +116,34 @@ export function useRoom(code: string): RoomSnapshot & { refresh: RefreshFn } {
     [code],
   )
 
-  // Chargement initial + abonnements Realtime communs.
+  // Chargement initial.
   React.useEffect(() => {
-    let channel: RealtimeChannel | null = null
+    void refresh({ silent: true })
+  }, [refresh])
+
+  // Abonnements Realtime limités à la room courante.
+  const roomId = state.room?.id
+  React.useEffect(() => {
+    if (!roomId) return
     let cancelled = false
-
-    const setup = async () => {
-      await refresh({ silent: true })
-      if (cancelled) return
-
-      const supabase = getSupabaseBrowserClient()
-      channel = supabase
-        .channel(`room:${code}`)
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'rooms' }, () => {
-          void refresh({ silent: true })
-        })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'room_players' }, () => {
-          void refresh({ silent: true })
-        })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'game_sessions' }, () => {
-          void refresh({ silent: true })
-        })
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, () => {
-          void refresh({ silent: true })
-        })
-        .subscribe()
+    const supabase = getSupabaseBrowserClient()
+    const synchronize = () => {
+      if (!cancelled) void refresh({ silent: true })
     }
+    const channel: RealtimeChannel = supabase
+      .channel(`room:${code}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}` }, synchronize)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'room_players', filter: `room_id=eq.${roomId}` }, synchronize)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'game_sessions', filter: `room_id=eq.${roomId}` }, synchronize)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `room_id=eq.${roomId}` }, synchronize)
+      // Cette relecture ferme la fenêtre entre le premier fetch et l'abonnement.
+      .subscribe((status) => { if (status === 'SUBSCRIBED') synchronize() })
 
-    void setup()
     return () => {
       cancelled = true
-      if (channel) void getSupabaseBrowserClient().removeChannel(channel)
+      void supabase.removeChannel(channel)
     }
-  }, [code, refresh])
+  }, [code, refresh, roomId])
 
   // Reconnexion : retour d'onglet ou de réseau.
   React.useEffect(() => {

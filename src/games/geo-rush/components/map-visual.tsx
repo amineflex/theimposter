@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { geoCentroid, geoEquirectangular, geoIdentity, geoPath } from 'd3-geo'
+import { geoEquirectangular, geoIdentity, geoPath } from 'd3-geo'
 import { feature } from 'topojson-client'
 import worldData from 'world-atlas/countries-50m.json'
 import type { Feature, FeatureCollection } from 'geojson'
@@ -22,16 +22,25 @@ function focusedViewBox(selected: Feature | undefined): string {
   return [x, y, width, height].map((value) => Number(value.toFixed(3))).join(' ')
 }
 
-function WorldMapView({ geometryIndex, focused = false }: { geometryIndex: number; focused?: boolean }) {
+function WorldMapView({ geometryIndex, focused = false, markerCoordinates }: {
+  geometryIndex: number
+  focused?: boolean
+  markerCoordinates?: readonly [number, number]
+}) {
   const selected = features[geometryIndex]
-  const rawMarker = selected ? worldProjection(geoCentroid(selected as Feature)) : null
+  const rawMarker = markerCoordinates ? worldProjection([markerCoordinates[0], markerCoordinates[1]]) : null
   // Arrondi explicite : évite les écarts flottants infimes entre SSR et navigateur.
   const marker = rawMarker?.map((coordinate) => Number(coordinate.toFixed(3))) as [number, number] | undefined
   return (
     <svg viewBox={focused ? focusedViewBox(selected) : WORLD_VIEW_BOX} className="h-auto w-full" role="img" aria-label={focused ? 'Carte agrandie avec un pays coloré' : 'Carte du monde avec un pays coloré'}>
       <rect width="800" height="400" rx="24" fill="var(--color-blue)" opacity=".18" />
       {features.map((item, index) => <path key={`${item.id}-${index}`} d={drawWorld(item as Feature) ?? ''} fill={index === geometryIndex ? 'var(--color-yellow)' : 'var(--color-paper)'} stroke="var(--color-ink)" strokeWidth={index === geometryIndex ? 2.4 : .7} vectorEffect="non-scaling-stroke" />)}
-      {marker && !focused && <g transform={`translate(${marker[0]} ${marker[1]})`}><circle r="10" fill="var(--color-yellow)" stroke="var(--color-ink)" strokeWidth="3" vectorEffect="non-scaling-stroke" /><circle r="3" fill="var(--color-red)" /></g>}
+      {marker && (
+        <g transform={`translate(${marker[0]} ${marker[1]})`} aria-label="Emplacement exact de la capitale">
+          <circle r="12" fill="var(--color-red)" stroke="var(--color-ink)" strokeWidth="3" vectorEffect="non-scaling-stroke" />
+          <circle r="4" fill="var(--color-paper)" />
+        </g>
+      )}
     </svg>
   )
 }

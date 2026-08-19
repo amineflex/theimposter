@@ -21,6 +21,10 @@ function makeQuestion(
   source: readonly GeoCountry[],
   random: () => number,
 ): GeoQuestion {
+  if (country.preferCountryQuestions) {
+    if (type === 'map-capital') type = 'map-country'
+    if (type === 'country-capital' || type === 'capital-country') type = 'flag-country'
+  }
   const others = distractors(country, source, random)
   const countryChoices = shuffle([country.name, ...others.map((item) => item.name)], random)
   const capitalChoices = shuffle([country.capital, ...others.map((item) => item.capital)], random)
@@ -29,9 +33,9 @@ function makeQuestion(
 
   switch (type) {
     case 'map-capital':
-      return { ...base, type, geometryIndex, countryKey: country.code, prompt: 'Quelle est la capitale du pays coloré ?', answerMode: 'text', correctAnswer: country.capital, acceptedAnswers: country.capitalAliases }
+      return { ...base, type, geometryIndex, capitalCoordinates: country.capitalCoordinates, countryKey: country.code, prompt: 'Quelle est la CAPITALE du pays coloré ?', answerMode: 'text', correctAnswer: country.capital, acceptedAnswers: country.capitalAliases }
     case 'map-country':
-      return { ...base, type, geometryIndex, countryKey: country.code, prompt: 'Quel pays est coloré sur la carte ?', answerMode: 'choices', choices: countryChoices, correctAnswer: country.name, acceptedAnswers: country.aliases }
+      return { ...base, type, geometryIndex, focused: country.focusMap, countryKey: country.code, prompt: 'Quel pays est coloré sur la carte ?', answerMode: 'choices', choices: countryChoices, correctAnswer: country.name, acceptedAnswers: country.aliases }
     case 'flag-country':
       return { ...base, type, countryCode: country.code, countryKey: country.code, prompt: 'À quel pays appartient ce drapeau ?', answerMode: 'choices', choices: countryChoices, correctAnswer: country.name, acceptedAnswers: country.aliases }
     case 'country-capital':

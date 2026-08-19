@@ -23,6 +23,7 @@ import { GeoLeaderboard } from './leaderboard'
 
 export function GameScreen() {
   const room = useRoomContext()
+  const refreshRoom = room.refresh
   const { send, pending } = useGameAction()
   const { play } = useSound()
   const session = room.session
@@ -54,7 +55,10 @@ export function GameScreen() {
   const tick = React.useCallback(async () => {
     if (!session || session.status !== 'active') return
     await send({ type: 'tick' })
-  }, [send, session])
+    // Le Realtime reste le chemin rapide ; cette lecture garantit que chaque
+    // joueur rejoint la phase autoritaire même après un événement manqué.
+    await refreshRoom({ silent: true })
+  }, [send, session, refreshRoom])
   useDeadlineTicker({ endsAt: state?.phaseEndsAt, active: session?.status === 'active', onExpired: tick })
 
   if (!state || !session) {
@@ -65,6 +69,7 @@ export function GameScreen() {
     try {
       await send<{ result: { accepted: boolean } }>({ type: 'submit', roundIndex: state.roundIndex, answer })
       setSubmission({ sessionId: session.id, roundIndex: state.roundIndex })
+      await refreshRoom({ silent: true })
       play('pop')
     } catch (error) {
       toast.error(describeError(error))
